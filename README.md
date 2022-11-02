@@ -9,6 +9,15 @@ Chưa nghĩ ra... (Mọi người cùng suy nghĩ thêm nhé)
 ## Công nghệ: 
 Java + Firebase
 
+## Giao diện:
+Mình sẽ có khoảng 6 màn hình chính
+ - Đăng ký
+ - Đăng nhập
+ - Danh sách ChatRoom
+ - ChatRoom
+ - Danh bạ (danh sách user)
+ - Trang cá nhân
+
 ## Mô tả tính năng:
 
  ### Đăng ký:
@@ -26,16 +35,7 @@ Java + Firebase
  ### Trang cá nhân:
 > Sửa thông tin họ tên, ảnh đại diện của người dùng, nút đăng xuất.
 
-## Giao diện:
-Mình sẽ có khoảng 6 màn hình chính
- - Đăng ký
- - Đăng nhập
- - Danh sách ChatRoom
- - ChatRoom
- - Danh bạ (danh sách user)
- - Trang cá nhân
-
-**Database Model:**
+## Database Model:
 - User:
      + PhoneNumber (Primary Key)
      + FullName
