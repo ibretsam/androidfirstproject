@@ -56,5 +56,8 @@ Mình sẽ có khoảng 6 màn hình chính
 Mọi người tải git để làm việc chung trên 1 project. Nếu ai chưa biết git là gì thì có thể search google, coi qua những video hướng dẫn trên youtube trước, nếu vẫn chưa hiểu hay gặp vấn đề gì có thể hỏi mình. Link git hiện tại đang chỉ là 1 cái project mới hoàn toàn nên mọi người chưa cần phải clone về. Để sắp tới mình configure thêm cái Firebase rồi sau đó phân công công việc mọi người clone về sau cũng được.
 
 ### Phân công công việc:
-Hiện tại bữa sau thì thầy chỉ yêu cầu mình thiết kế giao diện, sáng nay Trang đã xung phong phần thiết kế Figma, Linh xung phong phần code giao diện lên App, còn lại cũng chưa có task gì thêm nên các bạn còn lại chắc sẽ khá rảnh. Nếu @Trang khi thiết kế gặp vấn đề gì thì đăng lên cho mọi người biết nha. Mọi người có thể nhận xét, góp ý để cải thiện hơn.
+Hiện tại bữa sau thì thầy chỉ yêu cầu mình thiết kế giao diện, sáng nay Trang đã xung phong phần thiết kế Figma, Linh xung phong phần code giao diện lên App, còn lại cũng chưa có task gì thêm nên các bạn còn lại chắc sẽ khá rảnh.
+
+Nếu @Trang khi thiết kế gặp vấn đề gì thì đăng lên cho mọi người biết nha. Mọi người có thể nhận xét, góp ý để cải thiện hơn.
+
 Mới vô nên chắc cũng chưa có nhiều task, mọi người có thể sẽ hơi rảnh, nhưng sắp tới sẽ có rất nhiều việc, mọi người chuẩn bị tinh thần trước cho sắp tới nhé, mình sẽ phân công và check deadline mọi người thường xuyên.
