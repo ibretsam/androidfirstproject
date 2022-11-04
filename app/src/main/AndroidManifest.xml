@@ -15,11 +15,7 @@
         <activity
             android:name=".Views.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Views.AccountActivity"
@@ -32,12 +28,20 @@
         </activity>
         <activity
             android:name=".Views.RegisterActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".Views.HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".Views.MainActivity"
+            android:name=".Views.SplashScreenActivity"
             android:exported="true" />
     </application>
 
