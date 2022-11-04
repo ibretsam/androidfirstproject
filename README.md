@@ -1,7 +1,4 @@
-# Update 02/11/2022
-
-Hi team
-Nhóm mình đã chọn làm đề tài App Chat, mình recap nhanh lại nội dung sáng nay nhóm đã họp nhé.
+# Update 04/11/2022
 
 ## Tên App:
 Chưa nghĩ ra... (Mọi người cùng suy nghĩ thêm nhé)
@@ -52,12 +49,6 @@ Mình sẽ có khoảng 6 màn hình chính
      + User2 (FK -> User)
      + LastMessage(FK -> Message)
 ## Dặn dò
-### Cách làm việc
-Mọi người tải git để làm việc chung trên 1 project. Nếu ai chưa biết git là gì thì có thể search google, coi qua những video hướng dẫn trên youtube trước, nếu vẫn chưa hiểu hay gặp vấn đề gì có thể hỏi mình. Link git hiện tại đang chỉ là 1 cái project mới hoàn toàn nên mọi người chưa cần phải clone về. Để sắp tới mình configure thêm cái Firebase rồi sau đó phân công công việc mọi người clone về sau cũng được.
+Hiện tại nhóm mình chỉ đang chờ Linh làm xong phần giao diện, mọi người nếu có làm những tính năng gì khác thì cứ làm thử ở ngoài, khoan hẵn commit lên git hen, để cho đỡ rối. Đợi Linh làm giao diện xong mình sửa lại rồi tới phần ai làm gì thì mình sẽ chia sau.
 
-### Phân công công việc:
-Hiện tại bữa sau thì thầy chỉ yêu cầu mình thiết kế giao diện, sáng nay Trang đã xung phong phần thiết kế Figma, Linh xung phong phần code giao diện lên App, còn lại cũng chưa có task gì thêm nên các bạn còn lại chắc sẽ khá rảnh.
-
-Nếu @Trang khi thiết kế gặp vấn đề gì thì đăng lên cho mọi người biết nha. Mọi người có thể nhận xét, góp ý để cải thiện hơn.
-
-Mới vô nên chắc cũng chưa có nhiều task, mọi người có thể sẽ hơi rảnh, nhưng sắp tới sẽ có rất nhiều việc, mọi người chuẩn bị tinh thần trước cho sắp tới nhé, mình sẽ phân công và check deadline mọi người thường xuyên.
+Nếu ai thấy có ý tưởng gì hay hoặc muốn thử làm gì cứ nhắn lên nhóm hoặc inbox anh hen. Hiện anh đã làm xong phần đăng ký bằng số điện thoại với firebase rồi. Có gì mọi người kéo về test thử nhé!
