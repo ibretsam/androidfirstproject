@@ -46,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Ánh xạ
         edtPhone = findViewById(R.id.edtPhone);
         edtOTP = findViewById(R.id.edtOTP);
         btnVerify = findViewById(R.id.btnVerify);
@@ -54,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         rAuth = FirebaseAuth.getInstance();
 
+        // Gửi OTP
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,10 +68,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                 sendVerificationCode(phone);
                 progressBar.setVisibility(View.VISIBLE);
-                lytOTP.setVisibility(View.VISIBLE);
             }
         });
 
+        // Verify Sđt và đăng ký
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Kiểm tra xem đã có đăng nhập hay chưa, nếu có thì chuyển sang HomeActivity
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
@@ -94,13 +98,14 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    // Hàm gửi OTP qua số điện thoại
     private void sendVerificationCode(String phoneNumber) {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(rAuth)
-                        .setPhoneNumber(phoneNumber)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this)                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .setPhoneNumber(phoneNumber)       // Set số điện thoại
+                        .setTimeout(60L, TimeUnit.SECONDS) // Set thời gian chờ
+                        .setActivity(this)
+                        .setCallbacks(mCallbacks)
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
@@ -128,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "OTP code has sent to your phone number", Toast.LENGTH_SHORT);
             btnRegister.setEnabled(true);
             progressBar.setVisibility(View.INVISIBLE);
+            lytOTP.setVisibility(View.VISIBLE);
         }
     };
 
@@ -143,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Login successfull", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                         }
                     }
