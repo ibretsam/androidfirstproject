@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="#1B202D"
     android:orientation="vertical"
-    tools:context=".Views.MainActivity">
+    tools:context=".Views.SplashScreenActivity">
 
     <TextView
         android:id="@+id/textview1"
