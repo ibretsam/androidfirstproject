@@ -13,9 +13,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidfirstproject.LoginSign.LoginScreen;
+import com.example.androidfirstproject.LoginSign.SignUpScreen;
 import com.example.androidfirstproject.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;
@@ -25,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     Animation topAnim, bottomAnim;
     ImageView image;
     TextView logo, slogan;
-    Button btnLogout;
+    Button btnLogint, btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,26 @@ public class HomeActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.imageView);
         logo = (TextView) findViewById(R.id.textView);
         slogan = (TextView) findViewById(R.id.textView2);
-        btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogint = (Button) findViewById(R.id.btnLogin);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
 
         mAuth = FirebaseAuth.getInstance();
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        btnLogint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(HomeActivity.this, RegisterActivity.class));
-                finish();
+//                mAuth.signOut();
+                startActivity(new Intent(HomeActivity.this, LoginScreen.class));
             }
         });
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, SignUpScreen.class));
+
+            }
+        });
+
 
         // Animat
         image.setAnimation(topAnim);
@@ -62,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(HomeActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(HomeActivity.this,LoginScreen.class);
                 startActivity(intent);
                 finish();
             }
