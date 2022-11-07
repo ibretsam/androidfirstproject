@@ -1,4 +1,4 @@
-package com.example.androidfirstproject.NavigationView;
+package com.example.androidfirstproject.Views.NavigationViews;
 
 import android.content.Intent;
 import android.os.Bundle;

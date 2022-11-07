@@ -1,4 +1,4 @@
-package com.example.androidfirstproject.Views;
+package com.example.androidfirstproject.Views.Auth;
 
 import android.os.Bundle;
 
