@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidfirstproject.R;
+import com.example.androidfirstproject.Views.Auth.PhoneInputActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;
@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                startActivity(new Intent(HomeActivity.this, RegisterActivity.class));
+                startActivity(new Intent(HomeActivity.this, PhoneInputActivity.class));
                 finish();
             }
         });
@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(HomeActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(HomeActivity.this, PhoneInputActivity.class);
                 startActivity(intent);
                 finish();
             }
