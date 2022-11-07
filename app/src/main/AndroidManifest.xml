@@ -13,24 +13,27 @@
         android:theme="@style/Theme.AndroidFirstProject"
         tools:targetApi="31">
         <activity
-            android:name=".RegisterActivityUser"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:name=".ChatApp.RoomChatActivity"
+            android:exported="true">
         </activity>
         <activity
-            android:name=".ChatApp.RoomChatActivity"
-            android:exported="true" />
-        <activity
             android:name=".NavigationView.MessageActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".NavigationView.PhoneBookActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".ChatApp.HomeMessage"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".Views.LoginActivity"
             android:exported="true" />
@@ -41,29 +44,18 @@
             android:name=".Views.HomeActivity"
             android:exported="true" />
         <activity
+            android:name=".Views.SplashScreenActivity"
+            android:exported="true" />
+        <activity
             android:name=".Views.RegisterActivity"
-            android:exported="true" />
-        <activity
-            android:name=".LoginSign.LoginScreen"
-            android:exported="true" />
-        <activity
-            android:name=".LoginSign.SignUpScreen"
-            android:exported="true" />
-        <activity
-            android:name=".LoginSign.ForgotPassword"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".NavigationView.AccountActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Views.SplashScreenActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
