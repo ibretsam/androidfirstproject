@@ -93,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Kiểm tra xem đã có đăng nhập hay chưa, nếu có thì chuyển sang HomeActivity
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
         }
     }
