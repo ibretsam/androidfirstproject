@@ -1,15 +1,24 @@
 package com.example.androidfirstproject.Models;
 
 public class User {
-    String phoneNumber, fullName, picture;
+    String id, phoneNumber, fullName, picture;
 
     public User() {
     }
 
-    public User(String phoneNumber, String fullName, String picture) {
+    public User(String id, String phoneNumber, String fullName, String picture) {
+        this.id = id;
         this.phoneNumber = phoneNumber;
         this.fullName = fullName;
         this.picture = picture;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPhoneNumber() {
