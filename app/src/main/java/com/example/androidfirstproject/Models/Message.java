@@ -5,6 +5,7 @@ public class Message {
     String content;
     String time;
     ChatRoom chatRoom;
+    int isMyMessage;
 
     public Message() {
     }
