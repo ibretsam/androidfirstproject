@@ -4,15 +4,15 @@ public class ChatRoom {
     int id;
     User user1, user2;
     Message message;
+    Message lastMessage;
 
-    public ChatRoom() {
-    }
 
-    public ChatRoom(int id, User user1, User user2, Message message) {
+    public ChatRoom(int id, User user1, User user2, Message message,Message lastMessage) {
         this.id = id;
         this.user1 = user1;
         this.user2 = user2;
         this.message = message;
+        this.lastMessage = lastMessage;
     }
 
     public int getId() {
@@ -45,5 +45,12 @@ public class ChatRoom {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+    public Message getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

@@ -7,11 +7,12 @@ public class Message {
     String time;
     ChatRoom chatRoom;
     int isMyMessage;
+    int isLastMessage;
 
     public Message() {
     }
 
-    public Message(String id, User sender, User receipient, String content, String time, ChatRoom chatRoom, int isMyMessage) {
+    public Message(String id, User sender, User receipient, String content, String time, ChatRoom chatRoom, int isMyMessage,int isLastMessage) {
         this.id = id;
         this.sender = sender;
         this.receipient = receipient;
@@ -19,6 +20,7 @@ public class Message {
         this.time = time;
         this.chatRoom = chatRoom;
         this.isMyMessage = isMyMessage;
+        this.isLastMessage = isLastMessage;
     }
 
     public String getId() {
@@ -75,5 +77,13 @@ public class Message {
 
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
+    }
+
+    public int getIsLastMessage() {
+        return isLastMessage;
+    }
+
+    public void setIsLastMessage(int isLastMessage) {
+        this.isLastMessage = isLastMessage;
     }
 }
