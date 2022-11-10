@@ -17,6 +17,11 @@ import com.example.androidfirstproject.adapter.ChatRoomAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -26,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MessageActivity extends AppCompatActivity {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DatabaseReference mDatabase;
     private ChatRoom chatRoom = null;
     private ListView lvListChat;
     @Override
@@ -70,30 +75,48 @@ public class MessageActivity extends AppCompatActivity {
 
     private void readData(){
         // fill data to fragment
-        db.collection("chatrooms")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<ChatRoom> list = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> map = document.getData();
-//                                String user2 = map.get("user2").toString();
-                                DocumentReference docRef = (DocumentReference) map.get("lastMessage");
-                                Log.d(">>>>>>>>>TAG",docRef + "");
-//                                String time = map.get("messages").toString();
-//                                ChatRoom chatroom =new ChatRoom(-1,user2 );
-//                                chatroom.setId(Integer.parseInt(document.getId()));
-//                                list.add(chatroom);
-                            }
-                            ChatRoomAdapter adapter = new ChatRoomAdapter(list,MessageActivity.this);
-                            lvListChat.setAdapter(adapter);
-                        } else {
+//        db.collection("chatrooms")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            ArrayList<ChatRoom> list = new ArrayList<>();
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Map<String, Object> map = document.getData();
+////                                String user2 = map.get("user2").toString();
+//                                DocumentReference docRef = (DocumentReference) map.get("lastMessage");
+//                                Log.d(">>>>>>>>>TAG",docRef + "");
+////                                String time = map.get("messages").toString();
+////                                ChatRoom chatroom =new ChatRoom(-1,user2 );
+////                                chatroom.setId(Integer.parseInt(document.getId()));
+////                                list.add(chatroom);
+//                            }
+//                            ChatRoomAdapter adapter = new ChatRoomAdapter(list,MessageActivity.this);
+//                            lvListChat.setAdapter(adapter);
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
+        String chatRoomId = mDatabase.push().getKey();
+        mDatabase.child(chatRoomId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        }
-                    }
-                });
+                ChatRoom chatroom = dataSnapshot.getValue(ChatRoom.class);
+
+                Log.d(">>>>>>>>>>>Tag", "Id>>>>>>>>>>>: " + chatroom.getId());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(">>>>>>>>>>TAG", "Failed to read value.", error.toException());
+            }
+        });
     }
 
 }
