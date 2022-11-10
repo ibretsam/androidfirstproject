@@ -2,23 +2,20 @@ package com.example.androidfirstproject.Models;
 
 public class Message {
     String id;
-    User sender, receipient;
     String content;
     String time;
-    ChatRoom chatRoom;
+    String chatRoomId;
     int isMyMessage;
     int isLastMessage;
 
     public Message() {
     }
 
-    public Message(String id, User sender, User receipient, String content, String time, ChatRoom chatRoom, int isMyMessage,int isLastMessage) {
+    public Message(String id, String content, String time, String chatRoomId, int isMyMessage, int isLastMessage) {
         this.id = id;
-        this.sender = sender;
-        this.receipient = receipient;
         this.content = content;
         this.time = time;
-        this.chatRoom = chatRoom;
+        this.chatRoomId = chatRoomId;
         this.isMyMessage = isMyMessage;
         this.isLastMessage = isLastMessage;
     }
@@ -39,22 +36,6 @@ public class Message {
         this.isMyMessage = isMyMessage;
     }
 
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceipient() {
-        return receipient;
-    }
-
-    public void setReceipient(User receipient) {
-        this.receipient = receipient;
-    }
-
     public String getContent() {
         return content;
     }
@@ -71,12 +52,12 @@ public class Message {
         this.time = time;
     }
 
-    public ChatRoom getChatRoom() {
-        return chatRoom;
+    public String getChatRoomId() {
+        return chatRoomId;
     }
 
-    public void setChatRoom(ChatRoom chatRoom) {
-        this.chatRoom = chatRoom;
+    public void setChatRoomId(String chatRoomId) {
+        this.chatRoomId = chatRoomId;
     }
 
     public int getIsLastMessage() {

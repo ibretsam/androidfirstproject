@@ -1,56 +1,52 @@
 package com.example.androidfirstproject.Models;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ChatRoom {
-    int id;
-    User user1, user2;
-    Message message;
-    Message lastMessage;
+    String user1Phone, user2Phone;
+    ArrayList<Message> messageList;
+    String lastMessageId;
 
-
-    public ChatRoom(int id, User user1, User user2, Message message,Message lastMessage) {
-        this.id = id;
-        this.user1 = user1;
-        this.user2 = user2;
-        this.message = message;
-        this.lastMessage = lastMessage;
+    public ChatRoom() {
     }
 
-    public int getId() {
-        return id;
+    public ChatRoom(String user1Phone, String user2Phone, ArrayList<Message> messageList, String lastMessageId) {
+        this.user1Phone = user1Phone;
+        this.user2Phone = user2Phone;
+        this.messageList = messageList;
+        this.lastMessageId = lastMessageId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getUser1Phone() {
+        return user1Phone;
     }
 
-    public User getUser1() {
-        return user1;
+    public void setUser1Phone(String user1Phone) {
+        this.user1Phone = user1Phone;
     }
 
-    public void setUser1(User user1) {
-        this.user1 = user1;
+    public String getUser2Phone() {
+        return user2Phone;
     }
 
-    public User getUser2() {
-        return user2;
+    public void setUser2Phone(String user2Phone) {
+        this.user2Phone = user2Phone;
     }
 
-    public void setUser2(User user2) {
-        this.user2 = user2;
+    public ArrayList<Message> getMessageList() {
+        return messageList;
     }
 
-    public Message getMessage() {
-        return message;
+    public void setMessageList(ArrayList<Message> messageList) {
+        this.messageList = messageList;
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
-    }
-    public Message getLastMessage() {
-        return lastMessage;
+    public String getLastMessageId() {
+        return lastMessageId;
     }
 
-    public void setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
+    public void setLastMessageId(String lastMessageId) {
+        this.lastMessageId = lastMessageId;
     }
 }
