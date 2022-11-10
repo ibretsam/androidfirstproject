@@ -50,10 +50,10 @@ public class ChatRoomAdapter extends BaseAdapter {
         }
         ChatRoom chatroom = (ChatRoom) getItem(_i);
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.nameUser2.setText(chatroom.getUser2().getFullName());
-        if(chatroom.getLastMessage().getIsLastMessage() == 1){
-        holder.lastMessage.setText(chatroom.getLastMessage().getContent());}
-        holder.time.setText(chatroom.getMessage().getTime());
+//        holder.nameUser2.setText(chatroom.getUser2().getFullName());
+//        if(chatroom.getLastMessage().getIsLastMessage() == 1){
+//        holder.lastMessage.setText(chatroom.getLastMessage().getContent());}
+//        holder.time.setText(chatroom.getMessage().getTime());
         return view;
 
 

@@ -70,7 +70,7 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        readData();
+//        readData();
     }
 
     private void readData(){
@@ -99,22 +99,16 @@ public class MessageActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
-        String chatRoomId = mDatabase.push().getKey();
-        mDatabase.child(chatRoomId).addValueEventListener(new ValueEventListener() {
+
+        mDatabase.child("chatRoom").child("1").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                ChatRoom chatroom = dataSnapshot.getValue(ChatRoom.class);
-
-                Log.d(">>>>>>>>>>>Tag", "Id>>>>>>>>>>>: " + chatroom.getId());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(">>>>>>>>>>TAG", "Failed to read value.", error.toException());
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                }
             }
         });
     }
