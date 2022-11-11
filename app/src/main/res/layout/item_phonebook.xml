@@ -1,73 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#292F3F"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="12dp"
-    android:elevation="5dp"
-    app:cardElevation="12dp"
-    app:cardUseCompatPadding="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:background="#292F3F">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@mipmap/ic_launcher"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/img1"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"
-                />
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/nametext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="25dp"
-                    android:text="This is Name"
-                    android:textColor="#000"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
+        <androidx.cardview.widget.CardView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imagview"
+            app:cardCornerRadius="60dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp">
             <ImageView
-                android:id="@+id/editicon"
-                android:layout_width="193dp"
-                android:layout_height="40dp"
-                android:src="@drawable/edit" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageview1"
+                android:src="@drawable/gi">
+            </ImageView>
+        </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:text="Brijesh"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:id="@+id/nameUser2"
+            android:textColor="#ffff"
+            android:textSize="25sp"
+            android:layout_toRightOf="@+id/imagview"
+            android:layout_marginLeft="20dp">
+        </TextView>
+    </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:id="@+id/deleteicon"
-                android:src="@drawable/delete"/>
-        </LinearLayout>
-    </LinearLayout>
-
-
-
-</androidx.cardview.widget.CardView>
+</RelativeLayout>
