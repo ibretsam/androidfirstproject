@@ -70,7 +70,7 @@
         tools:ignore="MissingConstraints">
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/listPhoneBook"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

@@ -31,7 +31,7 @@
             android:layout_height="30dp"
             android:text="Brijesh"
             android:textStyle="bold"
-            android:id="@+id/textview"
+            android:id="@+id/nameUser2"
             android:textColor="#ffff"
             android:textSize="20sp"
             android:layout_toRightOf="@+id/imagview"
@@ -43,21 +43,21 @@
             android:layout_width="120dp"
             android:layout_height="30dp"
             android:layout_marginLeft="75dp"
-            android:layout_toRightOf="@+id/textview"
+            android:layout_toRightOf="@+id/nameUser2"
             android:layout_marginTop="20dp"
             android:text="10:43 AM"
             android:textColor="#fff"
-            android:id="@+id/textview2"
+            android:id="@+id/time"
             android:textSize="12sp">
         </TextView>
         <TextView
             android:layout_width="120dp"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
-            android:id="@+id/textview3"
+            android:id="@+id/lastMessages"
             android:layout_toRightOf="@+id/imagview"
             android:textColor="#fff"
-            android:layout_below="@+id/textview"
+            android:layout_below="@+id/nameUser2"
             android:text="How are you?"
             android:textSize="15sp">
         </TextView>
