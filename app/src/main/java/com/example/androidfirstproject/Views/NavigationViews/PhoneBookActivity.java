@@ -2,12 +2,25 @@ package com.example.androidfirstproject.Views.NavigationViews;
 
 import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +53,9 @@ public class PhoneBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycle_phone);
-        lvPhoneBook=findViewById(R.id.listPhoneBook);
+        lvPhoneBook = findViewById(R.id.listPhoneBook);
+        mDatabase = FirebaseDatabase.getInstance().getReference("user");
+
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -69,13 +84,60 @@ public class PhoneBookActivity extends AppCompatActivity {
         fadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDatabase = FirebaseDatabase.getInstance().getReference("user");
-                String userId = mDatabase.push().getKey();
-//                createUser(userId,"0708391259", "Khanh Le", "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png");
-//                createUser(userId,"0874872478", "Linh", "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png");
-//                createUser(userId,"0987467283", "Trang", "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png");
+                openNewUserDialog(Gravity.CENTER);
             }
         });
+    }
+
+    // thêm user
+    private void openNewUserDialog(int gravity) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_add);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = gravity;
+        window.setAttributes(windowAttributes);
+        String userId = mDatabase.push().getKey();
+
+
+        EditText edtName = dialog.findViewById(R.id.edt_name_add);
+        EditText edtPhone = dialog.findViewById(R.id.edt_phone_add);
+        Button btnAddUser = dialog.findViewById(R.id.btnAdd);
+        Button btnCanel = dialog.findViewById(R.id.btnCancel);
+        final Handler heHandler = new Handler();
+//        String regexPhone="^[0-9]$";
+//        String phoneNumber=edtPhone.getText().toString();
+        String anhMau = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
+        String pathObject = String.valueOf(edtName);
+        btnAddUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createUser(userId, String.valueOf(edtPhone.getText()), String.valueOf(edtName.getText()), anhMau);
+                heHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                    }
+                }, 400);
+            }
+        });
+
+        btnCanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     @Override
@@ -86,7 +148,7 @@ public class PhoneBookActivity extends AppCompatActivity {
 
     private void createUser(String userId, String phoneNumber, String fullName, String profilePicture) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
-        User user = new User(phoneNumber, fullName, profilePicture);
+        User user = new User(phoneNumber,fullName,profilePicture);
         mDatabase.child(userId).setValue(user);
     }
 
@@ -98,8 +160,7 @@ public class PhoneBookActivity extends AppCompatActivity {
                 ArrayList<User> list = new ArrayList<>();
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
+                } else {
 
                     for (DataSnapshot data : task.getResult().getChildren()) {
                         User user = data.getValue(User.class);
@@ -108,11 +169,9 @@ public class PhoneBookActivity extends AppCompatActivity {
                     }
 
                 }
-               PhoneBookAdapter adapter = new PhoneBookAdapter(list,PhoneBookActivity.this);
-                            lvPhoneBook.setAdapter(adapter);
+                PhoneBookAdapter adapter = new PhoneBookAdapter(list, PhoneBookActivity.this);
+                lvPhoneBook.setAdapter(adapter);
             }
         });
-
-
     }
 }

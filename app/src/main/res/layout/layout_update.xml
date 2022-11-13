@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:layout_marginHorizontal="20dp"
     android:background="@drawable/bottom_sheet_background"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -57,6 +58,7 @@
 
 
             <EditText
+                android:id="@+id/edt_name_update"
                 android:drawableStart="@drawable/ic_baseline_account_box_24"
                 android:background="@drawable/custorm_input"
                 android:layout_width="match_parent"
@@ -81,6 +83,7 @@
 
 
             <EditText
+                android:id="@+id/edt_image_update"
                 android:drawableStart="@drawable/ic_baseline_image_24"
                 android:background="@drawable/custorm_input"
                 android:layout_width="match_parent"
@@ -94,18 +97,42 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-    <Button
-        android:id="@+id/btnShare"
-        android:layout_width="302dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        android:layout_height="41dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/button_add"
-        android:text="Update"
-        android:textColor="#FFDE69"
-        android:textSize="15sp"
-        app:backgroundTint="@null" />
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="150dp"
+            android:layout_height="41dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_add"
+            android:text="Update"
+            android:textColor="#FFDE69"
+            android:textSize="15sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="150dp"
+            android:layout_height="41dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_add"
+            android:text="Cancel"
+            android:textColor="#FFDE69"
+            android:textSize="15sp"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
 </LinearLayout>
