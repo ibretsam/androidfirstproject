@@ -49,6 +49,7 @@ public class PhoneBookActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FloatingActionButton fadd;
     private ArrayList<User> phoneBook;
+    private ArrayList<String> phoneBookUserID;
     ListView lvPhoneBook;
 
     @Override
@@ -159,17 +160,44 @@ public class PhoneBookActivity extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                ArrayList<User> list = new ArrayList<>();
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
                     User user = task.getResult().getValue(User.class);
-                    ArrayList<String> phoneBookUserID = user.getPhoneBook();
+                    phoneBookUserID = user.getPhoneBook();
+
                 }
-                PhoneBookAdapter adapter = new PhoneBookAdapter(list, PhoneBookActivity.this);
-                lvPhoneBook.setAdapter(adapter);
+
+            }
+
+        });
+        mDatabase = FirebaseDatabase.getInstance().getReference("user");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                ArrayList<User> list = new ArrayList<>();
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    for (DataSnapshot data : task.getResult().getChildren()) {
+                         for (int i = 0; i < phoneBookUserID.size(); i++) {
+                        String id = phoneBookUserID.get(i);
+                            if (!id.equals(data.getKey())) {
+                                User user = data.getValue(User.class);
+                                String name = user.getFullName();
+                                User userfriend = new User(name);
+
+                                list.add(userfriend);
+                            }
+                        }
+                    }
+                    PhoneBookAdapter adapter = new PhoneBookAdapter(list, PhoneBookActivity.this);
+                    lvPhoneBook.setAdapter(adapter);
+                }
             }
         });
+
+
 
     }
 }

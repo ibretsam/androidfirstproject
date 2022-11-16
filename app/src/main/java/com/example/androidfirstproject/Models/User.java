@@ -32,6 +32,9 @@ public class User {
         this.fullName = fullName;
         this.picture = picture;
     }
+    public User(String fullName) {
+        this.fullName = fullName;
+    }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
