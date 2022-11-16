@@ -41,12 +41,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PhoneBookActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FloatingActionButton fadd;
+    private ArrayList<User> phoneBook;
     ListView lvPhoneBook;
 
     @Override
@@ -153,7 +155,7 @@ public class PhoneBookActivity extends AppCompatActivity {
     }
 
     private void readUser() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("user");
+        mDatabase = FirebaseDatabase.getInstance().getReference("user").child("-NGlDg2sUqEVDJPBTF0e");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -161,17 +163,13 @@ public class PhoneBookActivity extends AppCompatActivity {
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
-
-                    for (DataSnapshot data : task.getResult().getChildren()) {
-                        User user = data.getValue(User.class);
-                        list.add(user);
-                        Log.d(TAG, "User: " + user.getFullName());
-                    }
-
+                    User user = task.getResult().getValue(User.class);
+                    ArrayList<String> phoneBookUserID = user.getPhoneBook();
                 }
                 PhoneBookAdapter adapter = new PhoneBookAdapter(list, PhoneBookActivity.this);
                 lvPhoneBook.setAdapter(adapter);
             }
         });
+
     }
 }

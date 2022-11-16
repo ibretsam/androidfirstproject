@@ -1,13 +1,26 @@
 package com.example.androidfirstproject.Models;
 
-public class User {
-    String phoneNumber, fullName, picture,id;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    public User(String phoneNumber, String fullName, String picture, String id) {
+public class User {
+    String phoneNumber, fullName, picture, id;
+    ArrayList<String> phoneBook;
+
+    public User(String fullName, ArrayList<String> phoneBook, String phoneNumber, String picture, String id) {
         this.phoneNumber = phoneNumber;
         this.fullName = fullName;
         this.picture = picture;
         this.id = id;
+        this.phoneBook = phoneBook;
+    }
+
+    public ArrayList<String> getPhoneBook() {
+        return phoneBook;
+    }
+
+    public void setPhoneBook(ArrayList<String> phoneBook) {
+        this.phoneBook = phoneBook;
     }
 
     public String getPhoneNumber() {
