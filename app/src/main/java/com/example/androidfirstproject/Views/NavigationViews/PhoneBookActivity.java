@@ -50,6 +50,7 @@ public class PhoneBookActivity extends AppCompatActivity {
     private FloatingActionButton fadd;
     private ArrayList<User> phoneBook;
     private ArrayList<String> phoneBookUserID;
+    private User phoneUser;
     ListView lvPhoneBook;
 
     @Override
@@ -58,6 +59,7 @@ public class PhoneBookActivity extends AppCompatActivity {
         setContentView(R.layout.recycle_phone);
         lvPhoneBook = findViewById(R.id.listPhoneBook);
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
+        phoneBook = new ArrayList<>();
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -122,7 +124,12 @@ public class PhoneBookActivity extends AppCompatActivity {
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createUser(userId, String.valueOf(edtPhone.getText()), String.valueOf(edtName.getText()), anhMau);
+                if (checkPhone(String.valueOf(edtPhone.getText()).trim()) != null) {
+                    addContact(checkPhone(String.valueOf(edtPhone.getText()).trim()));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error: Phone number not found", Toast.LENGTH_SHORT).show();
+                }
+//                createUser(userId, String.valueOf(edtPhone.getText()), String.valueOf(edtName.getText()), anhMau);
                 heHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -147,6 +154,44 @@ public class PhoneBookActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         readUser();
+    }
+
+    private User checkPhone(String phoneNumber) {
+        phoneUser = null;
+        mDatabase = FirebaseDatabase.getInstance().getReference("user");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot data : task.getResult().getChildren()) {
+                    try {
+                        User user = data.getValue(User.class);
+                        user.setId(data.getKey());
+                        if (phoneNumber.trim().equals(user.getPhoneNumber())) {
+                            addContact(user);
+                            break;
+                        }
+                        else {
+                            phoneUser = null;
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
+        return phoneUser;
+    }
+
+    private void addContact(User user) {
+        phoneBookUserID.add(user.getId());
+        mDatabase.child("-NGlDg2sUqEVDJPBTF0e/phoneBook").setValue(phoneBookUserID);
+        mDatabase.child("-NGlDg2sUqEVDJPBTF0e").child("phoneBook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Log.d(TAG, "onComplete: " + task.getResult());
+            }
+        });
     }
 
     private void createUser(String userId, String phoneNumber, String fullName, String profilePicture) {
@@ -175,23 +220,26 @@ public class PhoneBookActivity extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                ArrayList<User> list = new ArrayList<>();
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
-                    for (DataSnapshot data : task.getResult().getChildren()) {
-                         for (int i = 0; i < phoneBookUserID.size(); i++) {
-                        String id = phoneBookUserID.get(i);
-                            if (!id.equals(data.getKey())) {
-                                User user = data.getValue(User.class);
-                                String name = user.getFullName();
-                                User userfriend = new User(name);
+                            for (String id :  phoneBookUserID) {
+                                for (DataSnapshot data : task.getResult().getChildren()) {
+                                    if (data.getKey().equals(id.trim())) {
+                                        try {
+                                            User user = data.getValue(User.class);
+                                            user.setId(data.getKey());
+                                            phoneBook.add(user);
+                                        } catch (Exception e) {
+                                            Log.d(TAG, "Exception: " + e.getMessage());
+                                        }
 
-                                list.add(userfriend);
+                                    }
                             }
-                        }
+
                     }
-                    PhoneBookAdapter adapter = new PhoneBookAdapter(list, PhoneBookActivity.this);
+
+                    PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this);
                     lvPhoneBook.setAdapter(adapter);
                 }
             }
