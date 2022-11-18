@@ -14,11 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,23 +24,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
-import com.example.androidfirstproject.adapter.PhoneBookAdapter;
+import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PhoneBookActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -124,11 +114,17 @@ public class PhoneBookActivity extends AppCompatActivity {
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkPhone(String.valueOf(edtPhone.getText()).trim()) != null) {
-                    addContact(checkPhone(String.valueOf(edtPhone.getText()).trim()));
-                } else {
-                    Toast.makeText(getApplicationContext(), "Error: Phone number not found", Toast.LENGTH_SHORT).show();
-                }
+                String phoneNumber = String.valueOf(edtPhone.getText()).trim();
+                checkPhone(phoneNumber, phoneUser -> {
+                    if (phoneUser != null) {
+                        addContact(phoneUser);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error: User not found", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Error: User not found");
+                    }
+                });
+
+
 //                createUser(userId, String.valueOf(edtPhone.getText()), String.valueOf(edtName.getText()), anhMau);
                 heHandler.postDelayed(new Runnable() {
                     @Override
@@ -145,9 +141,7 @@ public class PhoneBookActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         dialog.show();
-
     }
 
     @Override
@@ -156,8 +150,7 @@ public class PhoneBookActivity extends AppCompatActivity {
         readUser();
     }
 
-    private User checkPhone(String phoneNumber) {
-        phoneUser = null;
+    private User checkPhone(String phoneNumber, final OnCompleteCallback callback) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -167,7 +160,7 @@ public class PhoneBookActivity extends AppCompatActivity {
                         User user = data.getValue(User.class);
                         user.setId(data.getKey());
                         if (phoneNumber.trim().equals(user.getPhoneNumber())) {
-                            addContact(user);
+                            phoneUser = user;
                             break;
                         }
                         else {
@@ -176,8 +169,8 @@ public class PhoneBookActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
                 }
+                callback.onComplete(phoneUser);
             }
         });
         return phoneUser;
@@ -210,12 +203,10 @@ public class PhoneBookActivity extends AppCompatActivity {
                 } else {
                     User user = task.getResult().getValue(User.class);
                     phoneBookUserID = user.getPhoneBook();
-
                 }
-
             }
-
         });
+
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -236,9 +227,7 @@ public class PhoneBookActivity extends AppCompatActivity {
 
                                     }
                             }
-
                     }
-
                     PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this);
                     lvPhoneBook.setAdapter(adapter);
                 }
@@ -249,3 +238,4 @@ public class PhoneBookActivity extends AppCompatActivity {
 
     }
 }
+
