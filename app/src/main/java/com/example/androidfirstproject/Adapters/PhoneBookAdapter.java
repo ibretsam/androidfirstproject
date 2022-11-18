@@ -1,11 +1,9 @@
-package com.example.androidfirstproject.adapter;
+package com.example.androidfirstproject.Adapters;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -20,15 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.bumptech.glide.Glide;
-import com.example.androidfirstproject.Models.ChatRoom;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
-import com.example.androidfirstproject.Views.NavigationViews.PhoneBookActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,9 +29,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import org.checkerframework.checker.units.qual.m;
-
-import java.time.LocalTime;
 import java.util.List;
 
 public class PhoneBookAdapter extends BaseAdapter {
