@@ -19,9 +19,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidfirstproject.Adapters.IAdapterClickEvent;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
@@ -35,7 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class PhoneBookActivity extends AppCompatActivity {
+public class PhoneBookActivity extends AppCompatActivity implements IAdapterClickEvent {
     private DatabaseReference mDatabase;
     private FloatingActionButton fadd;
     private ArrayList<User> phoneBook;
@@ -147,6 +149,7 @@ public class PhoneBookActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        phoneBook.clear();
         readUser();
     }
 
@@ -179,6 +182,8 @@ public class PhoneBookActivity extends AppCompatActivity {
     private void addContact(User user) {
         phoneBookUserID.add(user.getId());
         mDatabase.child("-NGlDg2sUqEVDJPBTF0e/phoneBook").setValue(phoneBookUserID);
+        phoneBook.clear();
+        readUser();
         mDatabase.child("-NGlDg2sUqEVDJPBTF0e").child("phoneBook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -193,7 +198,7 @@ public class PhoneBookActivity extends AppCompatActivity {
         mDatabase.child(userId).setValue(user);
     }
 
-    private void readUser() {
+    public void readUser() {
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child("-NGlDg2sUqEVDJPBTF0e");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -203,6 +208,7 @@ public class PhoneBookActivity extends AppCompatActivity {
                 } else {
                     User user = task.getResult().getValue(User.class);
                     phoneBookUserID = user.getPhoneBook();
+
                 }
             }
         });
@@ -214,28 +220,45 @@ public class PhoneBookActivity extends AppCompatActivity {
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
-                            for (String id :  phoneBookUserID) {
-                                for (DataSnapshot data : task.getResult().getChildren()) {
-                                    if (data.getKey().equals(id.trim())) {
-                                        try {
-                                            User user = data.getValue(User.class);
-                                            user.setId(data.getKey());
-                                            phoneBook.add(user);
-                                        } catch (Exception e) {
-                                            Log.d(TAG, "Exception: " + e.getMessage());
-                                        }
-
+                    if (phoneBookUserID.isEmpty()) {
+                        phoneBook.clear();
+                        PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this, phoneBookUserID);
+                        lvPhoneBook.setAdapter(adapter);
+                    } else {
+                        for (String id : phoneBookUserID) {
+                            for (DataSnapshot data : task.getResult().getChildren()) {
+                                if (data.getKey().equals(id.trim())) {
+                                    try {
+                                        User user = data.getValue(User.class);
+                                        user.setId(data.getKey());
+                                        phoneBook.add(user);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Exception: " + e.getMessage());
                                     }
+
+                                }
                             }
+                        }
+                        PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this, phoneBookUserID);
+                        lvPhoneBook.setAdapter(adapter);
+
                     }
-                    PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this);
-                    lvPhoneBook.setAdapter(adapter);
                 }
             }
         });
 
+    }
 
+    @Override
+    public void onEditClick(ArrayList<String> phoneBookUserId) {
 
+    }
+
+    @Override
+    public void onDeleteClick(ArrayList<String> phoneBookUserId) {
+        mDatabase.child("-NGlDg2sUqEVDJPBTF0e/phoneBook").setValue(phoneBookUserID);
+        phoneBook.clear();
+        readUser();
     }
 }
 
