@@ -1,9 +1,10 @@
 package com.example.androidfirstproject.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class User {
+public class User implements Serializable {
     String phoneNumber, fullName, picture, id;
     ArrayList<String> phoneBook;
 
