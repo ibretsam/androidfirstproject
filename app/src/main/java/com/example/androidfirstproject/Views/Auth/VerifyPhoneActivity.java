@@ -1,18 +1,24 @@
 package com.example.androidfirstproject.Views.Auth;
 
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
+import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Views.HomeActivity;
+import com.example.androidfirstproject.Views.NavigationViews.PhoneBookActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -21,15 +27,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
 
-    EditText edtOTP;
-    Button btnResend, btnVerify;
-    String verificationID, phone;
-    FirebaseAuth rAuth;
+    private EditText edtOTP;
+    private Button btnResend, btnVerify;
+    private String verificationID, phone;
+    private FirebaseAuth rAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +70,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 }
 
                 verifyCode(otp);
+                checkUser(phone);
             }
         });
     }
@@ -113,9 +124,28 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(VerifyPhoneActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
+//
                             }
                         }
                     });
+        }
+
+        private void checkUser(String phone) {
+            mDatabase = FirebaseDatabase.getInstance().getReference("user");
+            mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    } else {
+                            for(DataSnapshot data : task.getResult().getChildren()) {
+                                if (phone.equals(data.child("phoneNumber").getValue())) {
+                                    startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
+                                }
+
+                            }
+                        }
+                    }
+            });
         }
     }
