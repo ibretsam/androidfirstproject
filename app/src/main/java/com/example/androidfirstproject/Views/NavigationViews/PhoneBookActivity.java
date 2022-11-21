@@ -192,11 +192,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         });
     }
 
-    private void createUser(String userId, String phoneNumber, String fullName, String profilePicture) {
-        mDatabase = FirebaseDatabase.getInstance().getReference("user");
-        User user = new User(phoneNumber,fullName,profilePicture);
-        mDatabase.child(userId).setValue(user);
-    }
+
 
     public void readUser() {
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child("-NGlDg2sUqEVDJPBTF0e");
