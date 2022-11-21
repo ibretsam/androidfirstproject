@@ -49,7 +49,7 @@ public class PhoneInputActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String phone = "+84" + edtPhone.getText().toString().trim();
 
-                if (TextUtils.isEmpty(phone)) {
+                if (TextUtils.isEmpty(edtPhone.getText().toString().trim())) {
                     edtPhone.setError("Phone number is required.");
                     return;
                 }
