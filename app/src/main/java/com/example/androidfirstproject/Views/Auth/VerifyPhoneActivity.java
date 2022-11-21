@@ -5,6 +5,7 @@ import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -57,6 +58,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         if (phoneNumberBundle != null) {
             phone = phoneNumberBundle.getString("phoneNumber");
         }
+        Log.d(ContentValues.TAG, "onCreate: " + phone);
+
 
         sendVerificationCode(phone);
 
@@ -71,9 +74,6 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 }
 
                 verifyCode(otp);
-                Intent intent = new Intent(VerifyPhoneActivity.this, UserInfoActivity.class);
-                intent.putExtra("phoneNum", phone);
-                startActivity(intent);
                 checkUser(phone);
             }
         });
@@ -93,66 +93,68 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                final String code = credential.getSmsCode();
-                if (code != null) {
-                    verifyCode(code);
-                }
+        @Override
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+            final String code = credential.getSmsCode();
+            if (code != null) {
+                verifyCode(code);
             }
-
-            @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-                Toast.makeText(VerifyPhoneActivity.this, "Verification Failed.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCodeSent(@NonNull String s,
-                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                super.onCodeSent(s, token);
-                verificationID = s;
-                Toast.makeText(VerifyPhoneActivity.this, "OTP code has sent to your phone number", Toast.LENGTH_SHORT);
-            }
-        };
-
-        private void verifyCode (String code){
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
-            signInByCredentials(credential);
         }
 
-        private void signInByCredentials (PhoneAuthCredential credential){
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            firebaseAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(VerifyPhoneActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-//
-                            }
-                        }
-                    });
+        @Override
+        public void onVerificationFailed(@NonNull FirebaseException e) {
+            Toast.makeText(VerifyPhoneActivity.this, "Verification Failed.", Toast.LENGTH_SHORT).show();
         }
 
-        private void checkUser(String phone) {
-            mDatabase = FirebaseDatabase.getInstance().getReference("user");
-            mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (!task.isSuccessful()) {
-                        Log.e("firebase", "Error getting data", task.getException());
-                    } else {
-                            for(DataSnapshot data : task.getResult().getChildren()) {
-                                if (phone.equals(data.child("phoneNumber").getValue())) {
-                                    startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
-                                    finish();
-                                } else {
-                                    startActivity(new Intent(VerifyPhoneActivity.this, UserInfoActivity.class));
-                                }
+        @Override
+        public void onCodeSent(@NonNull String s,
+                               @NonNull PhoneAuthProvider.ForceResendingToken token) {
+            super.onCodeSent(s, token);
+            verificationID = s;
+            Toast.makeText(VerifyPhoneActivity.this, "OTP code has sent to your phone number", Toast.LENGTH_SHORT);
+        }
+    };
 
-                            }
+    private void verifyCode (String code){
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
+        signInByCredentials(credential);
+    }
+
+    private void signInByCredentials (PhoneAuthCredential credential){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(VerifyPhoneActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         }
                     }
-            });
-        }
+                });
     }
+
+    private void checkUser(String phone) {
+        mDatabase = FirebaseDatabase.getInstance().getReference("user");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Intent intent = new Intent(VerifyPhoneActivity.this, UserInfoActivity.class);
+                    intent.putExtra("phone", phone);
+                    Log.d(TAG, "onComplete: " + phone);
+                    startActivity(intent);
+                    for(DataSnapshot data : task.getResult().getChildren()) {
+                        if (phone.equals(data.child("phoneNumber").getValue())) {
+                            startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
+                            finish();
+                        } else {
+                            startActivity(new Intent(VerifyPhoneActivity.this, UserInfoActivity.class));
+                        }
+                    }
+                }
+            }
+        });
+    }
+}

@@ -23,6 +23,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private EditText fullNameInput;
     private Button updateBtn;
     private DatabaseReference mDatabase;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class UserInfoActivity extends AppCompatActivity {
         updateBtn = findViewById(R.id.updateBtn);
 
         Bundle phoneNumberBundle = getIntent().getExtras();
-        String phone = phoneNumberBundle.getString("phoneNum");
+        phone = phoneNumberBundle.getString("phoneNumber");
         Log.d(TAG, "onCreate: " + phone);
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
