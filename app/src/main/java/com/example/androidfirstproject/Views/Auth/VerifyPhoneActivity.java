@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class VerifyPhoneActivity extends AppCompatActivity {
 
     private EditText edtOTP;
-    private Button btnResend, btnVerify;
+    private Button btnResend, btnLogIn;
     private String verificationID, phone;
     private FirebaseAuth rAuth;
     private DatabaseReference mDatabase;
@@ -48,7 +48,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
         edtOTP = findViewById(R.id.edtOTP);
         btnResend = findViewById(R.id.btnResend);
-        btnVerify = findViewById(R.id.btnVerify);
+        btnLogIn = findViewById(R.id.btnLogIn);
 
         rAuth = FirebaseAuth.getInstance();
 
@@ -60,9 +60,10 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
         sendVerificationCode(phone);
 
-        btnVerify.setOnClickListener(new View.OnClickListener() {
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: Clicked");
                 String otp = edtOTP.getText().toString().trim();
                 if (TextUtils.isEmpty(otp)) {
                     edtOTP.setError("Please enter your OTP.");
@@ -70,6 +71,9 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 }
 
                 verifyCode(otp);
+                Intent intent = new Intent(VerifyPhoneActivity.this, UserInfoActivity.class);
+                intent.putExtra("phoneNum", phone);
+                startActivity(intent);
                 checkUser(phone);
             }
         });
@@ -141,6 +145,9 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                             for(DataSnapshot data : task.getResult().getChildren()) {
                                 if (phone.equals(data.child("phoneNumber").getValue())) {
                                     startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
+                                    finish();
+                                } else {
+                                    startActivity(new Intent(VerifyPhoneActivity.this, UserInfoActivity.class));
                                 }
 
                             }
