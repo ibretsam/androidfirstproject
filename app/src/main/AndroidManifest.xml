@@ -30,13 +30,6 @@
         <activity
             android:name=".Views.NavigationViews.PhoneBookActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-
         </activity>
         <activity
             android:name=".ChatApp.HomeMessage"
@@ -54,7 +47,15 @@
             android:name=".Views.Auth.PhoneInputActivity"
             android:exported="true">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
+        <activity android:name=".Views.Auth.UserInfoActivity"
+            android:exported="true" ></activity>
         <activity
             android:name=".Views.NavigationViews.AccountActivity"
             android:exported="true"></activity>

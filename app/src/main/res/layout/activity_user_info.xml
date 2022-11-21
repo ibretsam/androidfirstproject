@@ -47,10 +47,12 @@
             android:textColorHint="@color/white"
             app:boxStrokeWidthFocused="2dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Username">
+            android:hint="Full name">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fullNameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,14 +60,15 @@
 
 
     <Button
+        android:id="@+id/updateBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backgroundTint="@null"
-        android:background="@drawable/button_background_green"
-        android:textColor="#000"
-        android:textStyle="bold"
-        android:text="Update"
         android:layout_margin="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_background_green"
+        android:text="Update"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:backgroundTint="@null" />
 </LinearLayout>
