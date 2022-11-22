@@ -148,12 +148,12 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     Log.d(TAG, "onComplete: " + phone);
                     for(DataSnapshot data : task.getResult().getChildren()) {
                         if (phone.equals(data.child("phoneNumber").getValue())) {
+                            Log.d(TAG, "onComplete: " + data.child("phoneNumber").getValue());
                             startActivity(new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class));
                             finish();
-                        } else {
-                            startActivity(intent);
                         }
                     }
+                    startActivity(intent);
                 }
             }
         });
