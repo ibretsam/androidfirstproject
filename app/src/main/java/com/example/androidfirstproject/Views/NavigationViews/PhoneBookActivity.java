@@ -59,8 +59,14 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         lvPhoneBook = findViewById(R.id.listPhoneBook);
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        currentUserID = user.getUid();
+        if (user != null) {
+            currentUserID = user.getUid();
+        } else {
+            Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+        }
+
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -125,7 +131,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phoneNumber = String.valueOf(edtPhone.getText()).trim();
+                String phoneNumber = "+84" + String.valueOf(edtPhone.getText()).trim();
                 checkPhone(phoneNumber, phoneUser -> {
                     if (phoneUser != null) {
                         addContact(phoneUser);
@@ -214,8 +220,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                     User user = task.getResult().getValue(User.class);
                     phoneBookUserID = user.getPhoneBook();
                     CurrentPhoneUser2 = user.getPhoneNumber();
-
-
                 }
             }
         });
@@ -254,8 +258,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                                 User user= (User) parent.getItemAtPosition(position);
                                 String phoneUser2 = user.getPhoneNumber();
                                 createChatRoom(phoneUser2);
-
-
                             }
                         });
                     }
