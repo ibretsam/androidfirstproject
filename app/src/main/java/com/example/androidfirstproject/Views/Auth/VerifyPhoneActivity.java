@@ -142,15 +142,16 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
                     Intent intent = new Intent(VerifyPhoneActivity.this, UserInfoActivity.class);
-                    intent.putExtra("phone", phone);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("phone", phone);
+                    intent.putExtra("phoneNumberPackage", bundle);
                     Log.d(TAG, "onComplete: " + phone);
-                    startActivity(intent);
                     for(DataSnapshot data : task.getResult().getChildren()) {
                         if (phone.equals(data.child("phoneNumber").getValue())) {
-                            startActivity(new Intent(VerifyPhoneActivity.this, HomeActivity.class));
+                            startActivity(new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class));
                             finish();
                         } else {
-                            startActivity(new Intent(VerifyPhoneActivity.this, UserInfoActivity.class));
+                            startActivity(intent);
                         }
                     }
                 }

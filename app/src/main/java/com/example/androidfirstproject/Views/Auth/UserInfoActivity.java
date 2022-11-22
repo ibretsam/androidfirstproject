@@ -33,9 +33,10 @@ public class UserInfoActivity extends AppCompatActivity {
         fullNameInput = findViewById(R.id.fullNameInput);
         updateBtn = findViewById(R.id.updateBtn);
 
-        Bundle phoneNumberBundle = getIntent().getExtras();
-        phone = phoneNumberBundle.getString("phoneNumber");
-        Log.d(TAG, "onCreate: " + phone);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("phoneNumberPackage");
+        phone = bundle.getString("phone");
+        Log.d(TAG, "PhoneNumber: " + phone);
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +45,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(fullNameInput.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Username must not empty", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    Log.d(TAG, "Phone Number: " + phone);
+                    mDatabase = FirebaseDatabase.getInstance().getReference("user");
                     String userId = mDatabase.push().getKey();
                     String profileUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
                     String fullName = fullNameInput.getText().toString();
