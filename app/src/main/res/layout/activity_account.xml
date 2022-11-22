@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.AccountActivity">
+    tools:context=".Views.NavigationViews.AccountActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -330,7 +330,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/logoutBtn"
             android:layout_width="286dp"
             android:layout_height="49dp"
             android:background="@drawable/button_background_green"
