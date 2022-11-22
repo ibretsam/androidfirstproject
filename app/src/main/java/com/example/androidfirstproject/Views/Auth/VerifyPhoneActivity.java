@@ -41,6 +41,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private String verificationID, phone;
     private FirebaseAuth rAuth;
     private DatabaseReference mDatabase;
+    private Boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         btnLogIn = findViewById(R.id.btnLogIn);
 
         rAuth = FirebaseAuth.getInstance();
+        loggedIn = false;
 
 
         Bundle phoneNumberBundle = getIntent().getExtras();
@@ -148,12 +150,18 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     Log.d(TAG, "onComplete: " + phone);
                     for(DataSnapshot data : task.getResult().getChildren()) {
                         if (phone.equals(data.child("phoneNumber").getValue())) {
-                            Log.d(TAG, "onComplete: " + data.child("phoneNumber").getValue());
-                            startActivity(new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class));
-                            finish();
+                            loggedIn = true;
+                            break;
+                        } else {
+                            loggedIn = false;
                         }
                     }
-                    startActivity(intent);
+                    if (loggedIn == true) {
+                        startActivity(new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class));
+                        finish();
+                    } else {
+                        startActivity(intent);
+                    }
                 }
             }
         });
