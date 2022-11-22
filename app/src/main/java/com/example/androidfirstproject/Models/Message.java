@@ -5,18 +5,26 @@ public class Message {
     String content;
     String time;
     String chatRoomId;
-    int isMyMessage;
+    String phoneUser2;
     int isLastMessage;
 
     public Message() {
     }
 
-    public Message(String id, String content, String time, String chatRoomId, int isMyMessage, int isLastMessage) {
+    public String getPhoneUser2() {
+        return phoneUser2;
+    }
+
+    public void setPhoneUser2(String phoneUser2) {
+        this.phoneUser2 = phoneUser2;
+    }
+
+    public Message(String id, String content, String time, String chatRoomId, String phoneUser2, int isLastMessage) {
         this.id = id;
         this.content = content;
         this.time = time;
         this.chatRoomId = chatRoomId;
-        this.isMyMessage = isMyMessage;
+        this.phoneUser2 = phoneUser2;
         this.isLastMessage = isLastMessage;
     }
 
@@ -28,13 +36,7 @@ public class Message {
         this.id = id;
     }
 
-    public int getIsMyMessage() {
-        return isMyMessage;
-    }
 
-    public void setIsMyMessage(int isMyMessage) {
-        this.isMyMessage = isMyMessage;
-    }
 
     public String getContent() {
         return content;
