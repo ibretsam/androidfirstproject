@@ -69,10 +69,10 @@ public class PhoneInputActivity extends AppCompatActivity {
         super.onStart();
 
         // Kiểm tra xem đã có đăng nhập hay chưa, nếu có thì chuyển sang HomeActivity
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            startActivity(new Intent(PhoneInputActivity.this, MessageActivity.class));
-            finish();
-        }
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if (user != null) {
+//            startActivity(new Intent(PhoneInputActivity.this, MessageActivity.class));
+//            finish();
+//        }
     }
 }
