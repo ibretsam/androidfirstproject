@@ -1,9 +1,10 @@
 package com.example.androidfirstproject.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChatRoom {
+public class ChatRoom implements Serializable {
     String user1Phone, user2Phone;
     ArrayList<Message> messageList;
     String lastMessageId;

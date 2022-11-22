@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,6 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidfirstproject.Adapters.IAdapterClickEvent;
+import com.example.androidfirstproject.ChatApp.RoomChatActivity;
+import com.example.androidfirstproject.Models.ChatRoom;
+import com.example.androidfirstproject.Models.Message;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
@@ -44,6 +48,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     private ArrayList<String> phoneBookUserID;
     private User phoneUser;
     ListView lvPhoneBook;
+    private String CurrentUserID, CurrentPhoneUser2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         lvPhoneBook = findViewById(R.id.listPhoneBook);
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
+        CurrentUserID = "-NGlDg2sUqEVDJPBTF0e";
+
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -208,6 +215,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                 } else {
                     User user = task.getResult().getValue(User.class);
                     phoneBookUserID = user.getPhoneBook();
+                    CurrentPhoneUser2 = user.getPhoneNumber();
+
 
                 }
             }
@@ -241,7 +250,16 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                         }
                         PhoneBookAdapter adapter = new PhoneBookAdapter(phoneBook, PhoneBookActivity.this, phoneBookUserID);
                         lvPhoneBook.setAdapter(adapter);
+                        lvPhoneBook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                User user= (User) parent.getItemAtPosition(position);
+                                String phoneUser2 = user.getPhoneNumber();
+                                createChatRoom(phoneUser2);
 
+
+                            }
+                        });
                     }
                 }
             }
@@ -249,10 +267,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
     }
 
-    @Override
-    public void onEditClick(ArrayList<String> phoneBookUserId) {
-
-    }
 
     @Override
     public void onDeleteClick(ArrayList<String> phoneBookUserId) {
@@ -260,5 +274,15 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         phoneBook.clear();
         readUser();
     }
+    public void createChatRoom(String phoneUser2){
+        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
+        ChatRoom chatRoom = new ChatRoom(CurrentPhoneUser2,phoneUser2,new ArrayList<Message>(),new String());
+        mDatabase.child(CurrentUserID).setValue(chatRoom);
+        Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
+        intent.putExtra("chatRoom",chatRoom);
+        startActivity(intent);
+
+    }
+
 }
 

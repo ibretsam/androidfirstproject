@@ -74,12 +74,11 @@ public class PhoneBookAdapter extends BaseAdapter {
         ImageView imageUser = null;
         if (view == null) {
             view = View.inflate(_viewGroup.getContext(), R.layout.item_phonebook, null);
-            ImageView edit = view.findViewById(R.id.editPhoneBook);
             ImageView delete = view.findViewById(R.id.deletePhoneBook);
             TextView nameUser = view.findViewById(R.id.nameUser);
 //            imageUser = view.findViewById(R.id.imagviewPhone);
 
-            PhoneBookAdapter.ViewHolder holder = new PhoneBookAdapter.ViewHolder(nameUser, edit, delete, imageUser);
+            PhoneBookAdapter.ViewHolder holder = new PhoneBookAdapter.ViewHolder(nameUser,  delete, imageUser);
             view.setTag(holder);
 
 
@@ -91,12 +90,6 @@ public class PhoneBookAdapter extends BaseAdapter {
 //      Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(imageUser);
 
 //        holder.Glide.with(view).load(user.getPicture()).into(imageUser);
-        holder.edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openUpdateDialog(Gravity.CENTER, user.getFullName(),user.getPhoneNumber());
-            }
-        });
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,11 +139,10 @@ public class PhoneBookAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         TextView nameUser;
-        ImageView edit, delete, imageUser;
+        ImageView  delete, imageUser;
 
-        public ViewHolder(TextView nameUser, ImageView edit, ImageView delete, ImageView imageUser) {
+        public ViewHolder(TextView nameUser, ImageView delete, ImageView imageUser) {
             this.nameUser = nameUser;
-            this.edit = edit;
             this.delete = delete;
             this.imageUser = imageUser;
         }
