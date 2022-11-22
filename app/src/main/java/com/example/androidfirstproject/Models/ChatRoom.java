@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ChatRoom implements Serializable {
-    String user1Phone, user2Phone;
+    String user1Phone, user2Phone, id;
     ArrayList<Message> messageList;
     String lastMessageId;
 
@@ -17,6 +17,14 @@ public class ChatRoom implements Serializable {
         this.user2Phone = user2Phone;
         this.messageList = messageList;
         this.lastMessageId = lastMessageId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUser1Phone() {
