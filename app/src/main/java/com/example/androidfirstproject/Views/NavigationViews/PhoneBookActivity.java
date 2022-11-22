@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +34,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,7 +49,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     private ArrayList<String> phoneBookUserID;
     private User phoneUser;
     ListView lvPhoneBook;
-    private String CurrentUserID, CurrentPhoneUser2;
+    private String currentUserID, CurrentPhoneUser2;
+    private FirebaseAuth rAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         lvPhoneBook = findViewById(R.id.listPhoneBook);
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
-        CurrentUserID = "-NGlDg2sUqEVDJPBTF0e";
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserID = user.getUid();
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -188,7 +190,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
     private void addContact(User user) {
         phoneBookUserID.add(user.getId());
-        mDatabase.child("-NGlDg2sUqEVDJPBTF0e/phoneBook").setValue(phoneBookUserID);
+        mDatabase.child(currentUserID + "/phoneBook").setValue(phoneBookUserID);
         phoneBook.clear();
         readUser();
         mDatabase.child("-NGlDg2sUqEVDJPBTF0e").child("phoneBook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -202,7 +204,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
 
     public void readUser() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("user").child("-NGlDg2sUqEVDJPBTF0e");
+        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -266,14 +268,14 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
     @Override
     public void onDeleteClick(ArrayList<String> phoneBookUserId) {
-        mDatabase.child("-NGlDg2sUqEVDJPBTF0e/phoneBook").setValue(phoneBookUserID);
+        mDatabase.child(currentUserID + "/phoneBook").setValue(phoneBookUserID);
         phoneBook.clear();
         readUser();
     }
     public void createChatRoom(String phoneUser2){
         mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
         ChatRoom chatRoom = new ChatRoom(CurrentPhoneUser2,phoneUser2,new ArrayList<Message>(),new String());
-        mDatabase.child(CurrentUserID).setValue(chatRoom);
+        mDatabase.child(currentUserID).setValue(chatRoom);
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
         startActivity(intent);

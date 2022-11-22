@@ -16,8 +16,12 @@ import android.widget.Toast;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Views.NavigationViews.PhoneBookActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class UserInfoActivity extends AppCompatActivity {
     private EditText fullNameInput;
@@ -37,6 +41,7 @@ public class UserInfoActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("phoneNumberPackage");
         phone = bundle.getString("phone");
         Log.d(TAG, "PhoneNumber: " + phone);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,8 +51,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Username must not empty", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d(TAG, "Phone Number: " + phone);
-                    mDatabase = FirebaseDatabase.getInstance().getReference("user");
-                    String userId = mDatabase.push().getKey();
+                    String userId = user.getUid();
                     String profileUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
                     String fullName = fullNameInput.getText().toString();
                     createUser(userId, phone, fullName, profileUrl);
@@ -59,7 +63,9 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void createUser(String userId, String phoneNumber, String fullName, String profilePicture) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
-        User user = new User(phoneNumber,fullName,profilePicture);
+        ArrayList<String> phoneBook = new ArrayList<String>();
+        phoneBook.add("");
+        User user = new User(fullName, phoneBook , phoneNumber, profilePicture, userId );
         mDatabase.child(userId).setValue(user);
     }
 }
