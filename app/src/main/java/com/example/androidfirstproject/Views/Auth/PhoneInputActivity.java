@@ -55,10 +55,11 @@ public class PhoneInputActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(PhoneInputActivity.this, VerifyPhoneActivity.class);
-                intent.putExtra("phoneNumber", phone);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("phone", phone);
+                intent.putExtra("phoneNumberPackage", bundle);
 
-                startActivity(new Intent(PhoneInputActivity.this, VerifyPhoneActivity.class));
+                startActivity(intent);
             }
         });
 
