@@ -55,11 +55,9 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         rAuth = FirebaseAuth.getInstance();
         loggedIn = false;
 
-
-        Bundle phoneNumberBundle = getIntent().getExtras();
-        if (phoneNumberBundle != null) {
-            phone = phoneNumberBundle.getString("phoneNumber");
-        }
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("phoneNumberPackage");
+        phone = bundle.getString("phoneNumber");
         Log.d(ContentValues.TAG, "onCreate: " + phone);
 
 
@@ -83,14 +81,21 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
     // Hàm gửi OTP qua số điện thoại
     private void sendVerificationCode(String phoneNumber) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(rAuth)
-                        .setPhoneNumber(phoneNumber)       // Set số điện thoại
-                        .setTimeout(60L, TimeUnit.SECONDS) // Set thời gian chờ
-                        .setActivity(this)
-                        .setCallbacks(mCallbacks)
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        try {
+            Log.d(TAG, "sendVerificationCode: " + phoneNumber);
+            PhoneAuthOptions options =
+                    PhoneAuthOptions.newBuilder(rAuth)
+                            .setPhoneNumber(phoneNumber)       // Set số điện thoại
+                            .setTimeout(60L, TimeUnit.SECONDS) // Set thời gian chờ
+                            .setActivity(this)
+                            .setCallbacks(mCallbacks)
+                            .build();
+            PhoneAuthProvider.verifyPhoneNumber(options);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error: please try again", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "sendVerificationCode: " + e.getMessage(), null);
+        }
+
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -105,6 +110,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
+            Log.d(TAG, "onVerificationFailed: " + e.getMessage());
             Toast.makeText(VerifyPhoneActivity.this, "Verification Failed.", Toast.LENGTH_SHORT).show();
         }
 
@@ -150,6 +156,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     Log.d(TAG, "onComplete: " + phone);
                     for(DataSnapshot data : task.getResult().getChildren()) {
                         if (phone.equals(data.child("phoneNumber").getValue())) {
+                            Log.d(TAG, "onComplete: LoggedIn!");
                             loggedIn = true;
                             break;
                         } else {

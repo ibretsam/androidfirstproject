@@ -208,7 +208,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     }
 
 
-
     public void readUser() {
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
