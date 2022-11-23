@@ -131,15 +131,12 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         windowAttributes.gravity = gravity;
         window.setAttributes(windowAttributes);
 
-        EditText edtName = dialog.findViewById(R.id.edt_name_add);
         EditText edtPhone = dialog.findViewById(R.id.edt_phone_add);
         Button btnAddUser = dialog.findViewById(R.id.btnAdd);
         Button btnCanel = dialog.findViewById(R.id.btnCancel);
         final Handler heHandler = new Handler();
 //        String regexPhone="^[0-9]$";
 //        String phoneNumber=edtPhone.getText().toString();
-        String anhMau = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
-        String pathObject = String.valueOf(edtName);
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

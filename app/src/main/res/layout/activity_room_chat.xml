@@ -72,11 +72,13 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:layout_marginBottom="10dp"
+        android:layout_margin="20dp"
         >
 
 
         <EditText
             android:id="@+id/input_message"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
@@ -84,7 +86,8 @@
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="2dp"
             android:layout_toStartOf="@+id/sendMessage"
-            android:hint="message" />
+            android:hint="message"
+            android:textColorHint="#B1B1B1"/>
 
         <ImageButton
             android:id="@+id/sendMessage"
