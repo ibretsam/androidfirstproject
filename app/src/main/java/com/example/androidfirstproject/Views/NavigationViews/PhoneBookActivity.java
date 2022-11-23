@@ -50,7 +50,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     private User phoneUser;
     ListView lvPhoneBook;
     private String currentUserID, CurrentPhoneUser2;
-    private FirebaseAuth rAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +59,27 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            currentUserID = user.getUid();
-        } else {
-            Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+
+        try {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getBundleExtra("currentUserPackage");
+            currentUserID = bundle.getString("currentUserID");
+            Log.d(TAG, "CurrentUserID on PhoneBookActivity: " + currentUserID);
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: Cannot get userid from previous Activity");
         }
+
+        if ( currentUserID == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                currentUserID = user.getUid();
+                Log.d(TAG, "CurrentUserID: " + currentUserID);
+            } catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
+            }
+        }
+
 
 
         // Initialize And Assign Varible
@@ -116,8 +130,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         WindowManager.LayoutParams windowAttributes = window.getAttributes();
         windowAttributes.gravity = gravity;
         window.setAttributes(windowAttributes);
-        String userId = mDatabase.push().getKey();
-
 
         EditText edtName = dialog.findViewById(R.id.edt_name_add);
         EditText edtPhone = dialog.findViewById(R.id.edt_phone_add);
@@ -209,6 +221,16 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
 
     public void readUser() {
+        if (currentUserID == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                currentUserID = user.getUid();
+                Log.d(TAG, "CurrentUserID: " + currentUserID);
+            } catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
+            }
+        }
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override

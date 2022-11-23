@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -42,6 +43,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private FirebaseAuth rAuth;
     private DatabaseReference mDatabase;
     private Boolean loggedIn;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         loggedIn = false;
 
         Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("phoneNumberPackage");
-        phone = bundle.getString("phoneNumber");
+        Bundle bundle = intent.getBundleExtra("phonePackage");
+        phone = bundle.getString("phone");
         Log.d(ContentValues.TAG, "onCreate: " + phone);
 
 
@@ -156,7 +158,6 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     Log.d(TAG, "onComplete: " + phone);
                     for(DataSnapshot data : task.getResult().getChildren()) {
                         if (phone.equals(data.child("phoneNumber").getValue())) {
-                            Log.d(TAG, "onComplete: LoggedIn!");
                             loggedIn = true;
                             break;
                         } else {
@@ -164,8 +165,26 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                         }
                     }
                     if (loggedIn == true) {
-                        startActivity(new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class));
-                        finish();
+                        Log.d(TAG, "onComplete: LoggedIn!");
+                        rAuth = FirebaseAuth.getInstance();
+                        mAuthListener = new FirebaseAuth.AuthStateListener() {
+                            @Override
+                            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user != null) {
+                                    String currentUserID = user.getUid();
+
+                                    Intent intent1 = new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class);
+                                    Bundle bundle1 = new Bundle();
+                                    bundle1.putString("currentUserID", currentUserID);
+                                    intent.putExtra("currentUserPackage", bundle);
+                                    startActivity(intent1);
+                                    finish();
+                                }
+                            }
+                        };
+                        rAuth.addAuthStateListener(mAuthListener);
+
                     } else {
                         startActivity(intent);
                     }

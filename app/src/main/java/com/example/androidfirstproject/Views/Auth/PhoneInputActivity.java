@@ -57,7 +57,7 @@ public class PhoneInputActivity extends AppCompatActivity {
                 Intent intent = new Intent(PhoneInputActivity.this, VerifyPhoneActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("phone", phone);
-                intent.putExtra("phoneNumberPackage", bundle);
+                intent.putExtra("phonePackage", bundle);
 
                 startActivity(intent);
             }
