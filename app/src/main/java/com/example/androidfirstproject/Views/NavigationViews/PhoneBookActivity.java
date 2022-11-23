@@ -199,7 +199,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         mDatabase.child(currentUserID + "/phoneBook").setValue(phoneBookUserID);
         phoneBook.clear();
         readUser();
-        mDatabase.child("-NGlDg2sUqEVDJPBTF0e").child("phoneBook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child(currentUserID).child("phoneBook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 Log.d(TAG, "onComplete: " + task.getResult());
