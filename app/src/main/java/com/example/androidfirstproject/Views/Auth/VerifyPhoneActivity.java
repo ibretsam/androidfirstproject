@@ -85,6 +85,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private void sendVerificationCode(String phoneNumber) {
         try {
             Log.d(TAG, "sendVerificationCode: " + phoneNumber);
+            FirebaseAuth.getInstance().getFirebaseAuthSettings()
+                    .setAppVerificationDisabledForTesting(true);
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(rAuth)
                             .setPhoneNumber(phoneNumber)       // Set số điện thoại
@@ -186,7 +188,15 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                         rAuth.addAuthStateListener(mAuthListener);
 
                     } else {
-                        startActivity(intent);
+                        rAuth = FirebaseAuth.getInstance();
+                        mAuthListener = new FirebaseAuth.AuthStateListener() {
+                            @Override
+                            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                                startActivity(intent);
+                            }
+                        };
+                        rAuth.addAuthStateListener(mAuthListener);
+
                     }
                 }
             }

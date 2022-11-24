@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "528282270794-2soavm6nl1e9gom0jq0ugsqdvs3a741v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.androidfirstproject",
+            "certificate_hash": "08138c2dddd4ea00d0c3f06c912e07fd8081c1e9"
+          }
+        },
+        {
           "client_id": "528282270794-87h31t2cna4lok4kpvmc93tjbv3fn5p3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -44,14 +52,6 @@
           "android_info": {
             "package_name": "com.example.androidfirstproject",
             "certificate_hash": "6f63792ea2b289aa832aa49cdbba8795d9ccb123"
-          }
-        },
-        {
-          "client_id": "528282270794-vfj93kms68bv4qn01uk3fuep3cjjerba.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.androidfirstproject",
-            "certificate_hash": "08138c2dddd4ea00d0c3f06c912e07fd8081c1e9"
           }
         },
         {
