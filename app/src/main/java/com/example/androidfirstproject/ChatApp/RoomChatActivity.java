@@ -121,6 +121,7 @@ public class RoomChatActivity extends AppCompatActivity {
                             break;
                         }
                     } catch (Exception e) {
+                        Log.d(TAG, "onComplete: " + e.getMessage());
                         Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }

@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class ChatRoom implements Serializable {
     String user1Phone, user2Phone, id;
-    ArrayList<Message> messageList;
+    ArrayList<String> messageList;
     String lastMessageId;
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String user1Phone, String user2Phone, ArrayList<Message> messageList, String lastMessageId) {
+    public ChatRoom(String user1Phone, String user2Phone, ArrayList<String> messageList, String lastMessageId) {
         this.user1Phone = user1Phone;
         this.user2Phone = user2Phone;
         this.messageList = messageList;
@@ -43,11 +43,11 @@ public class ChatRoom implements Serializable {
         this.user2Phone = user2Phone;
     }
 
-    public ArrayList<Message> getMessageList() {
+    public ArrayList<String> getMessageList() {
         return messageList;
     }
 
-    public void setMessageList(ArrayList<Message> messageList) {
+    public void setMessageList(ArrayList<String> messageList) {
         this.messageList = messageList;
     }
 

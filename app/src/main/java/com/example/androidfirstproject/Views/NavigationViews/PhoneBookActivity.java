@@ -294,7 +294,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     }
     public void createChatRoom(String phoneUser2){
         mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
-        ChatRoom chatRoom = new ChatRoom(CurrentPhoneUser2,phoneUser2,new ArrayList<Message>(),new String());
+        ChatRoom chatRoom = new ChatRoom(CurrentPhoneUser2,phoneUser2,new ArrayList<String>(),new String());
         mDatabase.child(currentUserID).setValue(chatRoom);
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
