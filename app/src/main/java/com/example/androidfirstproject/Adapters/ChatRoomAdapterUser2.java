@@ -8,18 +8,15 @@ import android.widget.TextView;
 
 import com.example.androidfirstproject.Models.ChatRoom;
 import com.example.androidfirstproject.Models.Message;
-import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoomAdapter extends BaseAdapter {
+public class ChatRoomAdapterUser2  extends BaseAdapter {
 
     private List<Message> listChat;
     private Context context;
-
-    public ChatRoomAdapter(List<Message> listChat, Context context) {
+    public ChatRoomAdapterUser2(List<Message> listChat, Context context){
         this.context = context;
         this.listChat = listChat;
     }
@@ -44,26 +41,26 @@ public class ChatRoomAdapter extends BaseAdapter {
     public View getView(int _i, View _view, ViewGroup _viewGroup) {
         View view =_view;
         if(view == null){
-            view = View.inflate(_viewGroup.getContext(), R.layout.chat_layout_right,null);
-            TextView myMessage = view.findViewById(R.id.myMessage);
-            TextView myTime = view.findViewById(R.id.myTime);
-            ViewHolder holder = new ViewHolder(myMessage,myTime);
+            view = View.inflate(_viewGroup.getContext(), R.layout.chat_layout_left,null);
+            TextView user2Message = view.findViewById(R.id.user2Message);
+            TextView user2Time = view.findViewById(R.id.user2Time);
+            ChatRoomAdapterUser2.ViewHolder holder = new ChatRoomAdapterUser2.ViewHolder(user2Message,user2Time);
             view.setTag(holder);
         }
         Message message = (Message) getItem(_i);
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.myMessage.setText(message.getContent());
-        holder.myTime.setText(message.getTime());
+        ChatRoomAdapterUser2.ViewHolder holder = (ChatRoomAdapterUser2.ViewHolder) view.getTag();
+        holder.user2Message.setText(message.getContent());
+        holder.user2Time.setText(message.getTime());
         return view;
 
 
     }
 
     private static class ViewHolder{
-        TextView myMessage, myTime;
-        public ViewHolder (TextView myMessage, TextView myTime){
-            this.myMessage = myMessage;
-            this.myTime = myTime;
+        TextView user2Message, user2Time;
+        public ViewHolder (TextView user2Message, TextView user2Time){
+            this.user2Message = user2Message;
+            this.user2Time = user2Time;
         }
     }
 

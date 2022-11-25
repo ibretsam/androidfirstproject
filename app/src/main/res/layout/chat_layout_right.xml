@@ -20,6 +20,7 @@
             android:padding="15dp"
             android:text="This is my message"
             android:textColor="@color/white"
+            android:id="@+id/myMessage"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
@@ -30,6 +31,7 @@
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="05:12 PM"/>
+            android:text="05:12 PM"
+            android:id="@+id/myTime"/>
     </LinearLayout>
 </RelativeLayout>
