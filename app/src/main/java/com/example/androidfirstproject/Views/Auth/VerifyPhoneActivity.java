@@ -97,7 +97,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
             PhoneAuthProvider.verifyPhoneNumber(options);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Error: please try again", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "sendVerificationCode: " + e.getMessage(), null);
+            Log.e(TAG, "sendVerificationCode: " + e.getMessage());
         }
 
     }

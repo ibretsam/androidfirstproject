@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -67,9 +68,18 @@ public class RoomChatActivity extends AppCompatActivity {
         listMessagesChatRoom = new ArrayList<Message>();
 
         ChatRoom chatRoom;
-        chatRoom = (ChatRoom) getIntent().getSerializableExtra("chatRoom");
-        phoneUser2 = chatRoom.getUser2Phone();
-        checkPhoneUser2(phoneUser2);
+        Intent intent = getIntent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            chatRoom = intent.getSerializableExtra("chatRoom", ChatRoom.class);
+        } else {
+            chatRoom = (ChatRoom) intent.getSerializableExtra("chatRoom");
+        }
+
+        if (chatRoom != null) {
+            phoneUser2 = chatRoom.getUser2Phone();
+            checkPhoneUser2(phoneUser2);
+        }
+
         tvNameUser2 = findViewById(R.id.tvNameUser2);
         input_message = findViewById(R.id.input_message);
         sendMessage = findViewById(R.id.sendMessage);
@@ -107,27 +117,17 @@ public class RoomChatActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-
-
                           reload();
                     }
-
-
                 });
               Toast.makeText(RoomChatActivity.this, "Tin nhắn đã gửi", Toast.LENGTH_SHORT).show();
-
             }
         });
-
-
     }
     @Override
     protected void onResume() {
         super.onResume();
-
     }
-
-
 
     private User checkPhoneUser2(String phoneUser2) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
@@ -245,21 +245,6 @@ public class RoomChatActivity extends AppCompatActivity {
 
     }
     public void reload(){
-//        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
-//        // Read from the database
-//        mDatabase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
-//                listMessId = chatRoom.getMessageList();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override

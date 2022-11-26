@@ -51,6 +51,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     private User phoneUser;
     ListView lvPhoneBook;
     private String currentUserID, CurrentPhoneUser1;
+    Boolean found = false;
+    ChatRoom switchedChatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                         }
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Error: " + e.getMessage());
                     }
                 }
                 callback.onComplete(phoneUser);
@@ -243,6 +246,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
             }
         });
 
+
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -276,23 +280,25 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 User user= (User) parent.getItemAtPosition(position);
                                 String phoneUser2 = user.getPhoneNumber();
-                                mDatabase = FirebaseDatabase.getInstance().getReference("ChatRoom");
-
+                                mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
                                 mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        Log.d(">>>>>Tag",""+phoneUser2 + CurrentPhoneUser1);
+                                        Log.d(">>>>>Tag","phoneUser 2: "+phoneUser2 + " phoneUser1: " + CurrentPhoneUser1);
+                                        Log.d(TAG, "onComplete: " + task.getResult().getChildren());
                                         for (DataSnapshot data : task.getResult().getChildren()) {
                                             ChatRoom chatRoom = data.getValue(ChatRoom.class);
-                                            Log.d(">>>>>Tag",""+chatRoom.getUserPhoneNumber());
-                                            if (chatRoom.getUserPhoneNumber().contains(phoneUser2)&& chatRoom.getUserPhoneNumber().contains(CurrentPhoneUser1) ){
-                                                    Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
-                                                    intent.putExtra("chatRoom",chatRoom);
-                                                    startActivity(intent);
-                                                }
-                                                else{
-                                                createChatRoom(phoneUser2);
-                                                }
+                                            if (chatRoom.getUserPhoneNumber().contains(phoneUser2) && chatRoom.getUserPhoneNumber().contains(CurrentPhoneUser1)) {
+                                                found = true;
+                                                switchedChatRoom = chatRoom;
+                                            }
+                                        }
+                                        if (found) {
+                                            Intent intent = new Intent(PhoneBookActivity.this, RoomChatActivity.class);
+                                            intent.putExtra("chatRoom", switchedChatRoom);
+                                            startActivity(intent);
+                                        } else {
+                                            createChatRoom(phoneUser2);
                                         }
                                     }
                                 });
