@@ -1,10 +1,14 @@
 package com.example.androidfirstproject.Views.NavigationViews;
 
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AccountActivity extends AppCompatActivity {
     private Button logoutBtn;
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,17 @@ public class AccountActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         logoutBtn = findViewById(R.id.logoutBtn);
+
+        if ( currentUserID == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                currentUserID = user.getUid();
+                Log.d(TAG, "CurrentUserID: " + currentUserID);
+            } catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
+            }
+        }
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
