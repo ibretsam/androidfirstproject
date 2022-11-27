@@ -19,7 +19,7 @@
             android:padding="15dp"
             android:text="This is opponent message"
             android:textColor="@color/white"
-            android:id="@+id/user2Message"
+            android:id="@+id/myMessage"
             android:textSize="20sp"
             android:textStyle="bold"
             />
@@ -27,7 +27,7 @@
         <TextView
             android:textColor="@color/white"
             android:layout_margin="5dp"
-            android:id="@+id/user2Time"
+            android:id="@+id/myTime"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,20 +6,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class ChatRoom implements Serializable {
-    String user1Phone, user2Phone, id;
+    String id;
     ArrayList<String> messageList ;
-    String lastMessageId;
+    String lastMessageId,nameUser2;
     ArrayList<String> userPhoneNumber ;
+
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String user1Phone, String user2Phone, ArrayList<String> messageList, String lastMessageId,ArrayList<String> userPhoneNumber) {
-        this.user1Phone = user1Phone;
-        this.user2Phone = user2Phone;
+    public ChatRoom(String id, ArrayList<String> messageList, String lastMessageId,String nameUser2,ArrayList<String> userPhoneNumber) {
+        this.id = id;
         this.messageList = messageList;
         this.lastMessageId = lastMessageId;
+        this.nameUser2= nameUser2;
         this.userPhoneNumber= userPhoneNumber;
+
+
     }
     public ChatRoom( ArrayList<String> messageList) {
         this.messageList = messageList;
@@ -42,22 +45,6 @@ public class ChatRoom implements Serializable {
         this.id = id;
     }
 
-    public String getUser1Phone() {
-        return user1Phone;
-    }
-
-    public void setUser1Phone(String user1Phone) {
-        this.user1Phone = user1Phone;
-    }
-
-    public String getUser2Phone() {
-        return user2Phone;
-    }
-
-    public void setUser2Phone(String user2Phone) {
-        this.user2Phone = user2Phone;
-    }
-
     public ArrayList<String> getMessageList() {
         return messageList;
     }
@@ -72,5 +59,13 @@ public class ChatRoom implements Serializable {
 
     public void setLastMessageId(String lastMessageId) {
         this.lastMessageId = lastMessageId;
+    }
+
+    public String getNameUser2() {
+        return nameUser2;
+    }
+
+    public void setNameUser2(String nameUser2) {
+        this.nameUser2 = nameUser2;
     }
 }

@@ -176,29 +176,6 @@ public class PhoneBookAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-//                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-//                Query getKey = ref.child("user").orderByChild("fullName").equalTo(user);
-//                String name = edtNameUpdate.getText().toString();
-//                String image = edtImageUpdate.getText().toString();
-//
-//                //getkey orderby child
-//                getKey.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        for (DataSnapshot keySnapshot : dataSnapshot.getChildren()) {
-//                            keySnapshot.getRef().child("fullName").setValue(name);
-//                            keySnapshot.getRef().child("picture").setValue(image);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.e(TAG, "onCancelled", databaseError.toException());
-//                    }
-//                });
-
-
-
                 heHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -50,7 +50,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
     private ArrayList<String> phoneBookUserID;
     private User phoneUser;
     ListView lvPhoneBook;
-    private String currentUserID, CurrentPhoneUser1;
+    private String currentUserID, CurrentPhoneUser1, phoneUser2,nameUser2 ;
     Boolean found = false;
     ChatRoom switchedChatRoom;
 
@@ -61,7 +61,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         lvPhoneBook = findViewById(R.id.listPhoneBook);
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
-
 
         try {
             Intent intent = getIntent();
@@ -87,7 +86,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
         // Set Home Selected
         bottomNavigationView.setSelectedItemId(R.id.account);
         // Perform ItemSelectedListener
@@ -279,18 +277,21 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 User user= (User) parent.getItemAtPosition(position);
-                                String phoneUser2 = user.getPhoneNumber();
+                                phoneUser2 = user.getPhoneNumber();
+                                nameUser2 = user.getFullName();
+                                Log.d(">>>>>>>>>TAG","phoneUser2"+ phoneUser2);
                                 mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
                                 mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        Log.d(">>>>>Tag","phoneUser 2: "+phoneUser2 + " phoneUser1: " + CurrentPhoneUser1);
                                         Log.d(TAG, "onComplete: " + task.getResult().getChildren());
                                         for (DataSnapshot data : task.getResult().getChildren()) {
                                             ChatRoom chatRoom = data.getValue(ChatRoom.class);
                                             if (chatRoom.getUserPhoneNumber().contains(phoneUser2) && chatRoom.getUserPhoneNumber().contains(CurrentPhoneUser1)) {
                                                 found = true;
                                                 switchedChatRoom = chatRoom;
+                                                Log.d(TAG, "chatRoom1: " + chatRoom.getUserPhoneNumber());
+                                                break;
                                             }
                                         }
                                         if (found) {
@@ -298,7 +299,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                                             intent.putExtra("chatRoom", switchedChatRoom);
                                             startActivity(intent);
                                         } else {
-                                            createChatRoom(phoneUser2);
+                                            createChatRoom(phoneUser2,nameUser2);
                                         }
                                     }
                                 });
@@ -319,13 +320,14 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         phoneBook.clear();
         readUser();
     }
-    public void createChatRoom(String phoneUser2){
+    public void createChatRoom(String phoneUser2,String nameUser2){
         mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
         ArrayList<String> userPhoneNumber = new ArrayList<>();
-        userPhoneNumber.add(phoneUser2);
         userPhoneNumber.add(CurrentPhoneUser1);
-        ChatRoom chatRoom = new ChatRoom(CurrentPhoneUser1,phoneUser2,new ArrayList<String>(Arrays.asList("")),new String(),userPhoneNumber);
-        mDatabase.child(currentUserID).setValue(chatRoom);
+        userPhoneNumber.add(phoneUser2);
+        String id = mDatabase.push().getKey();
+        ChatRoom chatRoom = new ChatRoom(id, new ArrayList<String>(Arrays.asList("")),new String(),nameUser2,userPhoneNumber);
+        mDatabase.child(id).setValue(chatRoom);
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
         startActivity(intent);

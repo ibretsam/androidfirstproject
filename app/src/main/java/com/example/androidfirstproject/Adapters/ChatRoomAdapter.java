@@ -1,70 +1,111 @@
 package com.example.androidfirstproject.Adapters;
 
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
+
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidfirstproject.Models.ChatRoom;
 import com.example.androidfirstproject.Models.Message;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoomAdapter extends BaseAdapter {
+public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
+
+    public static final int MSG_TYPE_LEFT  = 0;
+    public static final int MSG_TYPE_RIGHT  = 1;
 
     private List<Message> listChat;
     private Context context;
+    private String currentUserID, currentPhoneUser1;
+    private DatabaseReference mDatabase;
 
-    public ChatRoomAdapter(List<Message> listChat, Context context) {
+    public ChatRoomAdapter(List<Message> listChat, Context context, String currentUserID) {
         this.context = context;
         this.listChat = listChat;
+        this.currentUserID = currentUserID;
     }
 
 
+    @NonNull
     @Override
-    public int getCount() {
+    public ChatRoomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(viewType == MSG_TYPE_RIGHT) {
+           View  view = LayoutInflater.from(context).inflate(R.layout.chat_layout_right,parent,false);
+           return new ChatRoomAdapter.ViewHolder(view);
+        }
+        else{
+            View  view = LayoutInflater.from(context).inflate(R.layout.chat_layout_left,parent,false);
+            return new ChatRoomAdapter.ViewHolder(view);
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ChatRoomAdapter.ViewHolder holder, int position) {
+        Message message = listChat.get(position);
+        holder.myMessage.setText(message.getContent());
+        holder.myTime.setText(message.getTime());
+    }
+
+
+
+    @Override
+    public int getItemCount() {
         return listChat.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return listChat.get(position);
+    public void account(){
+        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    User user = task.getResult().getValue(User.class);
+                    currentPhoneUser1 = user.getPhoneNumber();
+                }
+            }
+        });
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int _i, View _view, ViewGroup _viewGroup) {
-        View view =_view;
-        if(view == null){
-            view = View.inflate(_viewGroup.getContext(), R.layout.chat_layout_right,null);
-            TextView myMessage = view.findViewById(R.id.myMessage);
-            TextView myTime = view.findViewById(R.id.myTime);
-            ViewHolder holder = new ViewHolder(myMessage,myTime);
-            view.setTag(holder);
-        }
-        Message message = (Message) getItem(_i);
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.myMessage.setText(message.getContent());
-        holder.myTime.setText(message.getTime());
-        return view;
-
-
-    }
-
-    private static class ViewHolder{
-        TextView myMessage, myTime;
-        public ViewHolder (TextView myMessage, TextView myTime){
-            this.myMessage = myMessage;
-            this.myTime = myTime;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+       public TextView myMessage, myTime;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            myMessage = itemView.findViewById(R.id.myMessage);
+            myTime = itemView.findViewById(R.id.myTime);
         }
     }
-
+    @Override
+    public int getItemViewType(int position) {
+        account();
+        if(listChat.get(position).getPhoneUser1().equals(currentPhoneUser1)){
+            Log.d(">>>>>>>>>>TAG","vitri"+listChat.get(position).getPhoneUser1()+currentPhoneUser1);
+            return MSG_TYPE_RIGHT;
+        }
+        else{
+            return MSG_TYPE_LEFT;
+        }
+    }
 }
