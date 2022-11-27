@@ -1,4 +1,4 @@
-package com.example.androidfirstproject.ChatApp;
+package com.example.androidfirstproject.Views.NavigationViews;
 
 import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,14 +129,14 @@ public class RoomChatActivity extends AppCompatActivity {
                                 }
                             } catch (Exception e) {
                                 Log.d(">TAG", ""+ e.getMessage());
-                                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Error send message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                         listMessagesChatRoom.clear();
                         nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
                         String idLastMessage = listMessId.get(listMessId.size() - 1);
                         nDatabase.child("lastMessageId").setValue(idLastMessage);
-                          reload();
+                        reload();
                     }
                 });
 
@@ -267,12 +266,10 @@ public class RoomChatActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 Log.d(TAG, "Exception: " + e.getMessage());
                             }
-
                         }
                     }
-                            ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this,currentUserID);
-                            lvListChatRoom.setAdapter(adapter);
-
+                    ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this,currentUserID);
+                    lvListChatRoom.setAdapter(adapter);
                 }
 
             }

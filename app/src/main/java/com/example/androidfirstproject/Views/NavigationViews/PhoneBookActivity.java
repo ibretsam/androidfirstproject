@@ -24,9 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidfirstproject.Adapters.IAdapterClickEvent;
-import com.example.androidfirstproject.ChatApp.RoomChatActivity;
 import com.example.androidfirstproject.Models.ChatRoom;
-import com.example.androidfirstproject.Models.Message;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
@@ -331,8 +329,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
         startActivity(intent);
-
     }
-
 }
 

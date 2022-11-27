@@ -61,18 +61,6 @@
             android:text="How are you?"
             android:textSize="15sp">
         </TextView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="-----------------------------------------------"
-            android:textColor="#fff"
-            android:id="@+id/textview4"
-            android:layout_marginTop="-5dp"
-            android:layout_toRightOf="@+id/imagview"
-            android:layout_below="@id/imagview"
-            android:layout_marginLeft="20dp">
-
-        </TextView>
     </RelativeLayout>
 
 </RelativeLayout>
