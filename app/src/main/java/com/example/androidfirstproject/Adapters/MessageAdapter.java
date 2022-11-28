@@ -1,5 +1,7 @@
 package com.example.androidfirstproject.Adapters;
 
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ public class MessageAdapter extends BaseAdapter {
     private List<ChatRoom> listMessage;
     Context context;
     private User currentUser;
+    private Boolean found = false;
 
     public MessageAdapter(List<ChatRoom> listMessage, Context context, User currentUser) {
 
@@ -67,27 +70,22 @@ public class MessageAdapter extends BaseAdapter {
         ChatRoom chatRoom = (ChatRoom)getItem(_i);
 
         MessageAdapter.ViewHolder holder = (MessageAdapter.ViewHolder) view.getTag();
-        holder.nameUser2.setText(chatRoom.getNameUser2());
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
-        mDatabase.get().addOnCompleteListener(task -> {
-            for (DataSnapshot data : task.getResult().getChildren()) {
-                if (data.getKey().equals(chatRoom.getId())) {
-                    mDatabase = FirebaseDatabase.getInstance().getReference("user");
-                    mDatabase.get().addOnCompleteListener(task1 -> {
-                        for (DataSnapshot data1 : task1.getResult().getChildren()) {
-                            User user2 = data1.getValue(User.class);
-                            if (chatRoom.getUserPhoneNumber().contains(user2.getPhoneNumber())) {
-                                if (!user2.getPhoneNumber().equals(currentUser.getPhoneNumber())) {
-                                    holder.nameUser2.setText(user2.getFullName());
-                                }
-                            }
+        for (String phone : chatRoom.getUserPhoneNumber()) {
+            if (!currentUser.getPhoneNumber().equals(phone)) {
+                mDatabase = FirebaseDatabase.getInstance().getReference("user");
+                mDatabase.get().addOnCompleteListener(task -> {
+                    for (DataSnapshot data : task.getResult().getChildren()) {
+                        User user = data.getValue(User.class);
+                        if (user.getPhoneNumber().equals(phone)) {
+                            holder.nameUser2.setText(user.getFullName());
                             break;
                         }
-                    });
-                }
+                    }
+                });
             }
-        });
+        }
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         mDatabase.get().addOnCompleteListener(task -> {
