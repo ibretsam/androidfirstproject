@@ -54,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Animat
+        // Animate
         image.setAnimation(topAnim);
         logo.setAnimation(bottomAnim);
         slogan.setAnimation(bottomAnim);

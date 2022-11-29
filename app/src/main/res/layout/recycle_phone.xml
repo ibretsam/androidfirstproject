@@ -12,7 +12,9 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+
+        >
 
     <ImageView
         android:id="@+id/back"
@@ -47,6 +49,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/nametitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -60,36 +63,21 @@
 
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="394dp"
-        android:layout_height="595dp"
-        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_width="match_parent"
+        android:layout_height="575dp"
         android:background="@drawable/backgroung_message"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"
         tools:ignore="MissingConstraints">
 
         <ListView
             android:id="@+id/listPhoneBook"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-
         </ListView>
 
     </FrameLayout>
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recview"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.0" />-->
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

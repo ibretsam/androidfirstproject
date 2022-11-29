@@ -10,6 +10,14 @@ public class Message {
     public Message() {
     }
 
+    public Message(String content, String time, String chatRoomId, String phoneUser1, String phoneUser2) {
+        this.content = content;
+        this.time = time;
+        this.chatRoomId = chatRoomId;
+        this.phoneUser1 = phoneUser1;
+        this.phoneUser2 = phoneUser2;
+    }
+
     public String getPhoneUser1() {
         return phoneUser1;
     }
@@ -26,14 +34,6 @@ public class Message {
         this.phoneUser2 = phoneUser2;
     }
 
-    public Message(String content, String time, String chatRoomId,String phoneUser1, String phoneUser2) {
-        this.content = content;
-        this.time = time;
-        this.chatRoomId = chatRoomId;
-        this.phoneUser1 = phoneUser1;
-        this.phoneUser2 = phoneUser2;
-    }
-
     public String getId() {
         return id;
     }
@@ -41,8 +41,6 @@ public class Message {
     public void setId(String id) {
         this.id = id;
     }
-
-
 
     public String getContent() {
         return content;

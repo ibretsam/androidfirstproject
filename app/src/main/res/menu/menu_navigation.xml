@@ -3,11 +3,12 @@
     <item android:id="@+id/messege"
         android:title="Messege"
         android:icon="@drawable/messege"/>
-    <item android:id="@+id/account"
-        android:title="Account"
-        android:icon="@drawable/acccount"/>
+
     <item android:id="@+id/contact"
         android:title="Contact"
         android:icon="@drawable/ic_baseline_supervisor_account_24"/>
+    <item android:id="@+id/account"
+        android:title="Account"
+        android:icon="@drawable/acccount"/>
 
 </menu>

@@ -43,18 +43,9 @@ public class AccountActivity extends AppCompatActivity {
         myName = findViewById(R.id.myName);
         logoutBtn = findViewById(R.id.logoutBtn);
 
+        getCurrentId();
 
-        if ( currentUserID == null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            try {
-                currentUserID = user.getUid();
-                Log.d(TAG, "CurrentUserID: " + currentUserID);
-            } catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
-                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
-            }
-        }
-account();
+        account();
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +57,7 @@ account();
         });
 
         // Set Home Selected
-        bottomNavigationView.setSelectedItemId(R.id.contact);
+        bottomNavigationView.setSelectedItemId(R.id.account);
         // Perform ItemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -76,18 +67,31 @@ account();
                         startActivity(new Intent(getApplicationContext(), MessageActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
-                    case R.id.account:
+                    case R.id.contact:
                         startActivity(new Intent(getApplicationContext(), PhoneBookActivity.class));
                         overridePendingTransition(0, 0);
+                    case R.id.account:
                         return true;
-                    case R.id.contact:
-                        return true;
+
                 }
                 return false;
             }
         });
 
 
+    }
+
+    public void getCurrentId(){
+        if ( currentUserID == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                currentUserID = user.getUid();
+                Log.d(TAG, "CurrentUserID: " + currentUserID);
+            } catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
+            }
+        }
     }
     public void account(){
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);

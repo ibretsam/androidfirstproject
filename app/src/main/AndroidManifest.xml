@@ -33,9 +33,6 @@
 
         </activity>
         <activity
-            android:name=".ChatApp.HomeMessage"
-            android:exported="true"></activity>
-        <activity
             android:name=".Views.Auth.LoginActivity"
             android:exported="true"></activity>
         <activity

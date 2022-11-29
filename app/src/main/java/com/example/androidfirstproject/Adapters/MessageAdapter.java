@@ -1,27 +1,20 @@
 package com.example.androidfirstproject.Adapters;
 
-import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 
 import com.example.androidfirstproject.Models.ChatRoom;
 import com.example.androidfirstproject.Models.Message;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -68,47 +61,11 @@ public class MessageAdapter extends BaseAdapter {
             view.setTag(holder);
         }
         ChatRoom chatRoom = (ChatRoom)getItem(_i);
-
         MessageAdapter.ViewHolder holder = (MessageAdapter.ViewHolder) view.getTag();
 
-        for (String phone : chatRoom.getUserPhoneNumber()) {
-            if (!currentUser.getPhoneNumber().equals(phone)) {
-                mDatabase = FirebaseDatabase.getInstance().getReference("user");
-                mDatabase.get().addOnCompleteListener(task -> {
-                    for (DataSnapshot data : task.getResult().getChildren()) {
-                        User user = data.getValue(User.class);
-                        if (user.getPhoneNumber().equals(phone)) {
-                            holder.nameUser2.setText(user.getFullName());
-                            break;
-                        }
-                    }
-                });
-            }
-        }
+        getNameUser2(chatRoom,holder);
 
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("Message");
-        mDatabase.get().addOnCompleteListener(task -> {
-            for (DataSnapshot data : task.getResult().getChildren()) {
-                if (data.getKey().equals(chatRoom.getLastMessageId())) {
-                    Message message = data.getValue(Message.class);
-                    holder.lastMessage.setText(message.getContent());
-                    holder.time.setText(message.getTime());
-                }
-            }
-        });
-
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        getLastMessage(chatRoom,holder);
 
         return view;
     }
@@ -123,6 +80,35 @@ public class MessageAdapter extends BaseAdapter {
         }
     }
 
+    public void getNameUser2(ChatRoom chatRoom, MessageAdapter.ViewHolder holder){
+        for (String phone : chatRoom.getUserPhoneNumber()) {
+            if (!currentUser.getPhoneNumber().equals(phone)) {
+                mDatabase = FirebaseDatabase.getInstance().getReference("user");
+                mDatabase.get().addOnCompleteListener(task -> {
+                    for (DataSnapshot data : task.getResult().getChildren()) {
+                        User user = data.getValue(User.class);
+                        if (user.getPhoneNumber().equals(phone)) {
+                            holder.nameUser2.setText(user.getFullName());
+                            break;
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public void getLastMessage(ChatRoom chatRoom, MessageAdapter.ViewHolder holder) {
+        mDatabase = FirebaseDatabase.getInstance().getReference("Message");
+        mDatabase.get().addOnCompleteListener(task -> {
+            for (DataSnapshot data : task.getResult().getChildren()) {
+                if (data.getKey().equals(chatRoom.getLastMessageId())) {
+                    Message message = data.getValue(Message.class);
+                    holder.lastMessage.setText(message.getContent());
+                    holder.time.setText(message.getTime());
+                }
+            }
+        });
+    }
 
 }
 

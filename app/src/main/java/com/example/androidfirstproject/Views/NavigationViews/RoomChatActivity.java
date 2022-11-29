@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import java.util.Locale;
 
 public class RoomChatActivity extends AppCompatActivity {
     private DatabaseReference mDatabase,nDatabase;
+    ImageView back;
     TextView tvNameUser2;
     EditText input_message;
     ImageButton sendMessage;
@@ -53,6 +55,19 @@ public class RoomChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
+
+        tvNameUser2 = findViewById(R.id.tvNameUser2);
+        input_message = findViewById(R.id.input_message);
+        sendMessage = findViewById(R.id.sendMessage);
+        back = findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RoomChatActivity.this,MessageActivity.class);
+                startActivity(intent);
+            }
+        });
         //recyclerView
         lvListChatRoom = findViewById(R.id.lvRoomChat);
         lvListChatRoom.setHasFixedSize(true);
@@ -64,7 +79,7 @@ public class RoomChatActivity extends AppCompatActivity {
         currentUserID = user.getUid();
         listMessId = new ArrayList<String>();
         listMessagesChatRoom = new ArrayList<Message>();
-
+// Lay ChatRoom truyen tu PhoneActivity
         ChatRoom chatRoom;
         Intent intent = getIntent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -74,34 +89,9 @@ public class RoomChatActivity extends AppCompatActivity {
         }
          idChatRoom = chatRoom.getId();
         Log.d(">>>>>>>TAG","chatroomid"+idChatRoom);
-        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
-        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    User user = task.getResult().getValue(User.class);
-                    currentUserPhone = user.getPhoneNumber();
-                    Log.d(TAG, "current: " + currentUserPhone);
-                    if (chatRoom != null) {
-                        for (String phone : chatRoom.getUserPhoneNumber()) {
-                            if (!phone.equals(currentUserPhone)) {
-                                phoneUser2 = phone;
-                                Log.d(">>TAG","phoneuser2roomchat"+phoneUser2);
-                                break;
-                            }
-                        }
-                        checkPhoneUser2(phoneUser2);
-                    }
-                }
-            }
-        });
 
+        getCurrentUser(chatRoom);
 
-        tvNameUser2 = findViewById(R.id.tvNameUser2);
-        input_message = findViewById(R.id.input_message);
-        sendMessage = findViewById(R.id.sendMessage);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +99,7 @@ public class RoomChatActivity extends AppCompatActivity {
               String currentTime = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(new Date());
               createMessage(phoneUser2,inputMessage,currentTime,idChatRoom);
               input_message.setText("");
+
                 mDatabase = FirebaseDatabase.getInstance().getReference("Message");
                 mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
@@ -133,13 +124,12 @@ public class RoomChatActivity extends AppCompatActivity {
                             }
                         }
                         listMessagesChatRoom.clear();
+                        reload();
                         nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
                         String idLastMessage = listMessId.get(listMessId.size() - 1);
                         nDatabase.child("lastMessageId").setValue(idLastMessage);
-                        reload();
                     }
                 });
-
 
               Toast.makeText(RoomChatActivity.this, "Tin nhắn đã gửi", Toast.LENGTH_SHORT).show();
             }
@@ -148,8 +138,6 @@ public class RoomChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        listMessagesChatRoom.clear();
-//        readMessage();
         listMessagesChatRoom.clear();
         reload();
     }
@@ -185,71 +173,8 @@ public class RoomChatActivity extends AppCompatActivity {
 
     }
 
-//    public void readMessage() {
-//        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
-//        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                } else {
-//                    ChatRoom chatRoom = task.getResult().getValue(ChatRoom.class);
-//                    listMessId = chatRoom.getMessageList();
-//                }
-//            }
-//        });
-//        mDatabase = FirebaseDatabase.getInstance().getReference("Message");
-//        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                } else {
-//                    for (String id : listMessId) {
-//                        for (DataSnapshot data : task.getResult().getChildren()) {
-//                            if (data.getKey().equals(id.trim())) {
-//                                try {
-//                                    Message message = data.getValue(Message.class);
-//                                    message.setId(data.getKey());
-//                                    listMessagesChatRoom.add(message);
-//                                } catch (Exception e) {
-//                                    Log.d(TAG, "Exception: " + e.getMessage());
-//                                }
-//
-//                            }
-//
-//                            ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this,currentUserID);
-//                            lvListChatRoom.setAdapter(adapter);
-//
-//                        }
-//
-//
-//                    }
-//
-//
-//
-//                }
-//            }
-//        });
-//
-//    }
     public void reload(){
-        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
-                listMessId = chatRoom.getMessageList();
-//                String idLastMessage = listMessId.get(listMessId.size() - 1);
-//                mDatabase.child("lastMessage").setValue(idLastMessage);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
+        getListChatRoom();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -274,7 +199,6 @@ public class RoomChatActivity extends AppCompatActivity {
 
             }
 
-
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
@@ -282,6 +206,49 @@ public class RoomChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public  void getCurrentUser(ChatRoom chatRoom){
+        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    User user = task.getResult().getValue(User.class);
+                    currentUserPhone = user.getPhoneNumber();
+                    Log.d(TAG, "current: " + currentUserPhone);
+                    if (chatRoom != null) {
+                        for (String phone : chatRoom.getUserPhoneNumber()) {
+                            if (!phone.equals(currentUserPhone)) {
+                                phoneUser2 = phone;
+                                Log.d(">>TAG","phoneuser2roomchat"+phoneUser2);
+                                break;
+                            }
+                        }
+                        checkPhoneUser2(phoneUser2);
+                    }
+                }
+            }
+        });
+    }
+
+    public void getListChatRoom(){
+        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
+                listMessId = chatRoom.getMessageList();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
 

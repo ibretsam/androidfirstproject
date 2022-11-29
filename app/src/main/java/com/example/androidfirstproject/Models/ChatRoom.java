@@ -2,8 +2,6 @@ package com.example.androidfirstproject.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class ChatRoom implements Serializable {
     String id;
@@ -11,22 +9,15 @@ public class ChatRoom implements Serializable {
     String lastMessageId,nameUser2;
     ArrayList<String> userPhoneNumber ;
 
-
     public ChatRoom() {
     }
 
-    public ChatRoom(String id, ArrayList<String> messageList, String lastMessageId,String nameUser2,ArrayList<String> userPhoneNumber) {
+    public ChatRoom(String id, ArrayList<String> messageList, String lastMessageId, String nameUser2, ArrayList<String> userPhoneNumber) {
         this.id = id;
         this.messageList = messageList;
         this.lastMessageId = lastMessageId;
         this.nameUser2= nameUser2;
         this.userPhoneNumber= userPhoneNumber;
-
-
-    }
-    public ChatRoom( ArrayList<String> messageList) {
-        this.messageList = messageList;
-
     }
 
     public ArrayList<String> getUserPhoneNumber() {

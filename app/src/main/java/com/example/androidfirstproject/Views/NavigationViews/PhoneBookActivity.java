@@ -60,32 +60,12 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         phoneBook = new ArrayList<>();
 
-        try {
-            Intent intent = getIntent();
-            Bundle bundle = intent.getBundleExtra("currentUserPackage");
-            currentUserID = bundle.getString("currentUserID");
-            Log.d(TAG, "CurrentUserID on PhoneBookActivity: " + currentUserID);
-        } catch (Exception e) {
-            Log.d(TAG, "onCreate: Cannot get userid from previous Activity");
-        }
-
-        if ( currentUserID == null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            try {
-                currentUserID = user.getUid();
-                Log.d(TAG, "CurrentUserID: " + currentUserID);
-            } catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
-                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
-            }
-        }
-
-
+        getCurrentId();
 
         // Initialize And Assign Varible
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         // Set Home Selected
-        bottomNavigationView.setSelectedItemId(R.id.account);
+        bottomNavigationView.setSelectedItemId(R.id.contact);
         // Perform ItemSelectedListener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -95,12 +75,14 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                         startActivity(new Intent(getApplicationContext(), MessageActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
-                    case R.id.account:
-                        return true;
+
                     case R.id.contact:
+                        return true;
+                    case R.id.account:
                         startActivity(new Intent(getApplicationContext(), AccountActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
+
                 }
                 return false;
             }
@@ -112,6 +94,12 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                 openNewUserDialog(Gravity.CENTER);
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        phoneBook.clear();
+        readUser();
     }
 
     // thêm user
@@ -134,8 +122,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         Button btnAddUser = dialog.findViewById(R.id.btnAdd);
         Button btnCanel = dialog.findViewById(R.id.btnCancel);
         final Handler heHandler = new Handler();
-//        String regexPhone="^[0-9]$";
-//        String phoneNumber=edtPhone.getText().toString();
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,7 +136,6 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                 });
 
 
-//                createUser(userId, String.valueOf(edtPhone.getText()), String.valueOf(edtName.getText()), anhMau);
                 heHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -169,12 +154,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         dialog.show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        phoneBook.clear();
-        readUser();
-    }
+
 
     private User checkPhone(String phoneNumber, final OnCompleteCallback callback) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
@@ -228,20 +208,8 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                 Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
             }
         }
-        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
-        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    User user = task.getResult().getValue(User.class);
-                    phoneBookUserID = user.getPhoneBook();
-                    CurrentPhoneUser1 = user.getPhoneNumber();
-                }
-            }
-        });
 
+        getCurrentUser();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -278,30 +246,9 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
                                 phoneUser2 = user.getPhoneNumber();
                                 nameUser2 = user.getFullName();
                                 Log.d(">>>>>>>>>TAG","phoneUser2"+ phoneUser2);
-                                mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
-                                mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        Log.d(TAG, "onComplete: " + task.getResult().getChildren());
-                                        for (DataSnapshot data : task.getResult().getChildren()) {
-                                            ChatRoom chatRoom = data.getValue(ChatRoom.class);
-                                            if (chatRoom.getUserPhoneNumber().contains(phoneUser2) && chatRoom.getUserPhoneNumber().contains(CurrentPhoneUser1)) {
-                                                found = true;
-                                                switchedChatRoom = chatRoom;
-                                                Log.d(TAG, "chatRoom1: " + chatRoom.getUserPhoneNumber());
-                                                break;
-                                            }
-                                        }
-                                        if (found) {
-                                            Intent intent = new Intent(PhoneBookActivity.this, RoomChatActivity.class);
-                                            intent.putExtra("chatRoom", switchedChatRoom);
-                                            startActivity(intent);
-                                        } else {
-                                            createChatRoom(phoneUser2,nameUser2);
-                                        }
-                                    }
-                                });
-//
+
+                                addChatRoom();
+
                             }
                         });
                     }
@@ -329,6 +276,69 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
         startActivity(intent);
+    }
+
+    public void getCurrentId(){
+        try {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getBundleExtra("currentUserPackage");
+            currentUserID = bundle.getString("currentUserID");
+            Log.d(TAG, "CurrentUserID on PhoneBookActivity: " + currentUserID);
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: Cannot get userid from previous Activity");
+        }
+
+        if ( currentUserID == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                currentUserID = user.getUid();
+                Log.d(TAG, "CurrentUserID: " + currentUserID);
+            } catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Error: Cannot get UserID", Toast.LENGTH_SHORT);
+                Log.d(TAG, "CurrentUserID Error: " + e.getMessage());
+            }
+        }
+    }
+
+    public void getCurrentUser(){
+        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    User user = task.getResult().getValue(User.class);
+                    phoneBookUserID = user.getPhoneBook();
+                    CurrentPhoneUser1 = user.getPhoneNumber();
+                }
+            }
+        });
+    }
+    public void addChatRoom(){
+        mDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Log.d(TAG, "onComplete: " + task.getResult().getChildren());
+                for (DataSnapshot data : task.getResult().getChildren()) {
+                    ChatRoom chatRoom = data.getValue(ChatRoom.class);
+                    if (chatRoom.getUserPhoneNumber().contains(phoneUser2) && chatRoom.getUserPhoneNumber().contains(CurrentPhoneUser1)) {
+                        found = true;
+                        switchedChatRoom = chatRoom;
+                        Log.d(TAG, "chatRoom1: " + chatRoom.getUserPhoneNumber());
+                        break;
+                    }
+                }
+                if (found) {
+                    Intent intent = new Intent(PhoneBookActivity.this, RoomChatActivity.class);
+                    intent.putExtra("chatRoom", switchedChatRoom);
+                    startActivity(intent);
+                } else {
+                    createChatRoom(phoneUser2,nameUser2);
+                }
+            }
+        });
     }
 }
 

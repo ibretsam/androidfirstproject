@@ -2,7 +2,6 @@ package com.example.androidfirstproject.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class User implements Serializable {
     String phoneNumber, fullName, picture, id;
@@ -16,6 +15,11 @@ public class User implements Serializable {
         this.phoneBook = phoneBook;
     }
 
+    public User(String phoneNumber, String fullName, String picture) {
+        this.phoneNumber = phoneNumber;
+        this.fullName = fullName;
+        this.picture = picture;
+    }
     public ArrayList<String> getPhoneBook() {
         return phoneBook;
     }
@@ -28,11 +32,6 @@ public class User implements Serializable {
         return phoneNumber;
     }
 
-    public User(String phoneNumber, String fullName, String picture) {
-        this.phoneNumber = phoneNumber;
-        this.fullName = fullName;
-        this.picture = picture;
-    }
     public User(String fullName) {
         this.fullName = fullName;
     }

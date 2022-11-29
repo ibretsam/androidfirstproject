@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MessageActivity extends AppCompatActivity {
     private DatabaseReference mDatabase,nDatabase;
@@ -64,12 +67,12 @@ public class MessageActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.messege:
                         return true;
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), PhoneBookActivity.class));
+                    case R.id.contact:
+                        startActivity(new Intent(getApplicationContext(),PhoneBookActivity.class ));
                         overridePendingTransition(0, 0);
                         return true;
-                    case R.id.contact:
-                        startActivity(new Intent(getApplicationContext(), AccountActivity.class));
+                    case R.id.account:
+                        startActivity(new Intent(getApplicationContext(),AccountActivity.class ));
                         overridePendingTransition(0, 0);
                         return true;
                 }
@@ -80,8 +83,6 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        readDataChatRoom();
-
     }
 
     private void readDataChatRoom() {
@@ -104,6 +105,15 @@ public class MessageActivity extends AppCompatActivity {
                     Log.d(TAG, "chatRoomInfo: " + listChatRoom + timemess + contentmess);
                     MessageAdapter adapter = new MessageAdapter(listChatRoom, MessageActivity.this, currentUser);
                     lvListChat.setAdapter(adapter);
+                    lvListChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                           ChatRoom chatRoom1 = (ChatRoom) parent.getItemAtPosition(position);
+                            Intent intent = new Intent(MessageActivity.this, RoomChatActivity.class);
+                                        intent.putExtra("chatRoom", chatRoom1);
+                                        startActivity(intent);
+                        }
+                    });
                 }
             }
             @Override
@@ -171,8 +181,5 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 }
