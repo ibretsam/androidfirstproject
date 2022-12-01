@@ -37,7 +37,7 @@ public class AccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        // Initialize And Assign Varible
+        // Initialize And Assign Variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         myPhone = findViewById(R.id.myPhone);
         myName = findViewById(R.id.myName);
