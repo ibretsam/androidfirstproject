@@ -64,8 +64,7 @@ public class RoomChatActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RoomChatActivity.this,MessageActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
         //recyclerView
