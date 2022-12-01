@@ -69,7 +69,6 @@ public class RoomChatActivity extends AppCompatActivity {
         });
         //recyclerView
         lvListChatRoom = findViewById(R.id.lvRoomChat);
-        lvListChatRoom.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         lvListChatRoom.setLayoutManager(linearLayoutManager);
