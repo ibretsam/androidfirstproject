@@ -16,19 +16,25 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MessageAdapter extends BaseAdapter {
     private DatabaseReference mDatabase;
 
-    private List<ChatRoom> listMessage;
+    private List<ChatRoom> chatRoomList;
     Context context;
     private User currentUser;
     private Boolean found = false;
 
-    public MessageAdapter(List<ChatRoom> listMessage, Context context, User currentUser) {
+    public MessageAdapter(List<ChatRoom> chatRoomList, Context context, User currentUser) {
 
-        this.listMessage = listMessage;
+        this.chatRoomList = chatRoomList;
         this.context = context;
         this.currentUser = currentUser;
     }
@@ -36,12 +42,12 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return listMessage.size();
+        return chatRoomList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listMessage.get(position);
+        return chatRoomList.get(position);
     }
 
     @Override
@@ -104,7 +110,16 @@ public class MessageAdapter extends BaseAdapter {
                 if (data.getKey().equals(chatRoom.getLastMessageId())) {
                     Message message = data.getValue(Message.class);
                     holder.lastMessage.setText(message.getContent());
-                    holder.time.setText(message.getTime());
+                    SimpleDateFormat formatter1=new SimpleDateFormat("dd-MM-yyyy hh:mm");
+                    try {
+                        Date date = formatter1.parse(message.getTime());
+                        PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
+                        String ago = prettyTime.format(date);
+                        holder.time.setText(ago);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
         });
