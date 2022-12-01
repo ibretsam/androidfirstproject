@@ -2,22 +2,33 @@ package com.example.androidfirstproject.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatRoom implements Serializable {
     String id;
     ArrayList<String> messageList ;
     String lastMessageId,nameUser2;
-    ArrayList<String> userPhoneNumber ;
+    ArrayList<String> userPhoneNumber;
+    Date lastMessageDate;
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String id, ArrayList<String> messageList, String lastMessageId, String nameUser2, ArrayList<String> userPhoneNumber) {
+    public ChatRoom(String id, ArrayList<String> messageList, String lastMessageId, String nameUser2, ArrayList<String> userPhoneNumber, Date lastMessageDate) {
         this.id = id;
         this.messageList = messageList;
         this.lastMessageId = lastMessageId;
         this.nameUser2= nameUser2;
-        this.userPhoneNumber= userPhoneNumber;
+        this.userPhoneNumber = userPhoneNumber;
+        this.lastMessageDate = lastMessageDate;
+    }
+
+    public Date getLastMessageDate() {
+        return lastMessageDate;
+    }
+
+    public void setLastMessageDate(Date lastMessageDate) {
+        this.lastMessageDate = lastMessageDate;
     }
 
     public ArrayList<String> getUserPhoneNumber() {

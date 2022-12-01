@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 public class PhoneBookActivity extends AppCompatActivity implements IAdapterClickEvent {
     private DatabaseReference mDatabase;
@@ -156,7 +157,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
 
 
 
-    private User checkPhone(String phoneNumber, final OnCompleteCallback callback) {
+    private User checkPhone(String phoneNumber, final OnCompleteCallbackUserPhone callback) {
         mDatabase = FirebaseDatabase.getInstance().getReference("user");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -271,7 +272,7 @@ public class PhoneBookActivity extends AppCompatActivity implements IAdapterClic
         userPhoneNumber.add(CurrentPhoneUser1);
         userPhoneNumber.add(phoneUser2);
         String id = mDatabase.push().getKey();
-        ChatRoom chatRoom = new ChatRoom(id, new ArrayList<String>(Arrays.asList("")),new String(),nameUser2,userPhoneNumber);
+        ChatRoom chatRoom = new ChatRoom(id, new ArrayList<String>(Arrays.asList("")),new String(),nameUser2,userPhoneNumber, Calendar.getInstance().getTime());
         mDatabase.child(id).setValue(chatRoom);
         Intent intent =  new Intent(PhoneBookActivity.this, RoomChatActivity.class);
         intent.putExtra("chatRoom",chatRoom);
