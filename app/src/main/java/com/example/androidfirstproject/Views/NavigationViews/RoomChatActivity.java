@@ -77,7 +77,8 @@ public class RoomChatActivity extends AppCompatActivity {
         currentUserID = user.getUid();
         listMessId = new ArrayList<String>();
         listMessagesChatRoom = new ArrayList<Message>();
-// Lay ChatRoom truyen tu PhoneActivity
+
+        // Lay ChatRoom truyen tu PhoneActivity
         ChatRoom chatRoom;
         Intent intent = getIntent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -89,45 +90,17 @@ public class RoomChatActivity extends AppCompatActivity {
         Log.d(">>>>>>>TAG","chatroomid"+idChatRoom);
 
         getCurrentUser(chatRoom);
+//        scrollToBottom(lvListChatRoom);
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               String inputMessage = String.valueOf(input_message.getText());
               String currentTime = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(new Date());
-              createMessage(phoneUser2,inputMessage,currentTime,idChatRoom);
+              Message message = createMessage(phoneUser2,inputMessage,currentTime,idChatRoom);
               input_message.setText("");
 
-                mDatabase = FirebaseDatabase.getInstance().getReference("Message");
-                mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        for (DataSnapshot data : task.getResult().getChildren()) {
-                            try {
-                                Message message= data.getValue(Message.class);
-                                message.setId(data.getKey());
-                                if (idChatRoom.equals(message.getChatRoomId())) {
-                                   messageID = message.getId();
-                                   message.setPhoneUser2(phoneUser2);
-                                    if (!listMessId.contains(messageID)) {
-                                        listMessId.add(messageID);
-                                    }
-                                    DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
-                                    nDatabase.child(idChatRoom + "/messageList").setValue(listMessId);
-
-                                }
-                            } catch (Exception e) {
-                                Log.d(">TAG", ""+ e.getMessage());
-                                Toast.makeText(getApplicationContext(), "Error send message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        listMessagesChatRoom.clear();
-                        reload();
-                        nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
-                        String idLastMessage = listMessId.get(listMessId.size() - 1);
-                        nDatabase.child("lastMessageId").setValue(idLastMessage);
-                    }
-                });
+              sendMessage();
 
               Toast.makeText(RoomChatActivity.this, "Tin nhắn đã gửi", Toast.LENGTH_SHORT).show();
             }
@@ -162,13 +135,45 @@ public class RoomChatActivity extends AppCompatActivity {
         return null;
     }
 
-    public void createMessage(String phoneUser2, String inputMessage, String currentTime, String idChatRoom ){
+    public void sendMessage() {
+        mDatabase = FirebaseDatabase.getInstance().getReference("Message");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot data : task.getResult().getChildren()) {
+                    try {
+                        Message message = data.getValue(Message.class);
+                        message.setId(data.getKey());
+                        if (idChatRoom.equals(message.getChatRoomId())) {
+                            messageID = message.getId();
+                            message.setPhoneUser2(phoneUser2);
+                            if (!listMessId.contains(messageID)) {
+                                listMessId.add(messageID);
+                            }
+                            DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom");
+                            nDatabase.child(idChatRoom + "/messageList").setValue(listMessId);
+
+                        }
+                    } catch (Exception e) {
+                        Log.d(">TAG", ""+ e.getMessage());
+                        Toast.makeText(getApplicationContext(), "Error send message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                listMessagesChatRoom.clear();
+                reload();
+                nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
+                String idLastMessage = listMessId.get(listMessId.size() - 1);
+                nDatabase.child("lastMessageId").setValue(idLastMessage);
+            }
+        });
+    }
+
+    public Message createMessage(String phoneUser2, String inputMessage, String currentTime, String idChatRoom ){
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         String messageId = mDatabase.push().getKey();
         Message message = new Message(inputMessage,currentTime,idChatRoom,currentUserPhone,phoneUser2);
         mDatabase.child(messageId).setValue(message);
-
-
+        return message;
     }
 
     public void reload(){
@@ -192,9 +197,10 @@ public class RoomChatActivity extends AppCompatActivity {
                         }
                     }
                     ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this,currentUserID);
+                    adapter.notifyDataSetChanged();
                     lvListChatRoom.setAdapter(adapter);
+                    scrollToBottom(lvListChatRoom);
                 }
-
             }
 
             @Override
@@ -245,6 +251,26 @@ public class RoomChatActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    private void scrollToBottom(final RecyclerView recyclerView) {
+        // scroll to last item to get the view of last item
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        final RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        final int lastItemPosition = adapter.getItemCount() - 1;
+
+        layoutManager.scrollToPositionWithOffset(lastItemPosition, 0);
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                // then scroll to specific offset
+                View target = layoutManager.findViewByPosition(lastItemPosition);
+                if (target != null) {
+                    int offset = recyclerView.getMeasuredHeight() - target.getMeasuredHeight();
+                    layoutManager.scrollToPositionWithOffset(lastItemPosition, offset);
+                }
             }
         });
     }

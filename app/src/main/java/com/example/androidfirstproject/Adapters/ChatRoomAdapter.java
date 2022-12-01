@@ -40,15 +40,14 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     @NonNull
     @Override
     public ChatRoomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
         if(viewType == MSG_TYPE_RIGHT) {
-           View  view = LayoutInflater.from(context).inflate(R.layout.chat_layout_right,parent,false);
-           return new ChatRoomAdapter.ViewHolder(view);
+           view = LayoutInflater.from(context).inflate(R.layout.chat_layout_right,parent,false);
         }
         else{
-            View  view = LayoutInflater.from(context).inflate(R.layout.chat_layout_left,parent,false);
-            return new ChatRoomAdapter.ViewHolder(view);
+            view = LayoutInflater.from(context).inflate(R.layout.chat_layout_left,parent,false);
         }
-
+        return new ChatRoomAdapter.ViewHolder(view);
     }
 
     @Override
