@@ -54,7 +54,11 @@
 
 </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/lvRoomChat" android:layout_below="@+id/top"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lvRoomChat"
+        android:layout_below="@+id/top"
         android:layout_above="@+id/chat_linear_layout"
         android:layout_marginBottom="7dp"/>
 
