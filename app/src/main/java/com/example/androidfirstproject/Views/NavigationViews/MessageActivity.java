@@ -3,6 +3,7 @@ package com.example.androidfirstproject.Views.NavigationViews;
 import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,8 +31,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MessageActivity extends AppCompatActivity {
     private DatabaseReference mDatabase,nDatabase;
@@ -49,7 +53,7 @@ public class MessageActivity extends AppCompatActivity {
         lvListChat= findViewById(R.id.lvListChat);
         listChatRoom = new ArrayList<>();
         currentUserID = getCurrentUserID();
-        getCurrentPhoneNumber(new OnCompleteCallback() {
+        getCurrentPhoneNumber(new OnCompleteCallbackUserPhone() {
             @Override
             public void onComplete(User phoneUser) {
                 readDataChatRoom();
@@ -98,23 +102,41 @@ public class MessageActivity extends AppCompatActivity {
                             listChatRoom.add(chatRoom);
                         }
                     }
-
                     readDataMessage(chatRoom);
                 }
-                if(listChatRoom != null) {
-                    Log.d(TAG, "chatRoomInfo: " + listChatRoom + timemess + contentmess);
-                    MessageAdapter adapter = new MessageAdapter(listChatRoom, MessageActivity.this, currentUser);
-                    lvListChat.setAdapter(adapter);
-                    lvListChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                           ChatRoom chatRoom1 = (ChatRoom) parent.getItemAtPosition(position);
-                            Intent intent = new Intent(MessageActivity.this, RoomChatActivity.class);
-                                        intent.putExtra("chatRoom", chatRoom1);
-                                        startActivity(intent);
+                sortChatRoomList(listChatRoom, new OnCompleteCallbackChatRoomList() {
+                    @Override
+                    public void onComplete(ArrayList<ChatRoom> chatRoomList) {
+                        if(listChatRoom != null) {
+                            for (ChatRoom chatRoom : listChatRoom) {
+                                if (chatRoom.getLastMessageDate() == null) {
+                                    continue;
+                                }
+                            }
+                            Collections.sort(listChatRoom, new Comparator<ChatRoom>() {
+                                @Override
+                                public int compare(ChatRoom o1, ChatRoom o2) {
+                                    if (o1.getLastMessageDate() == null || o2.getLastMessageDate() == null)
+                                        return 0;
+                                    return o2.getLastMessageDate().compareTo(o1.getLastMessageDate());
+                                }
+                            });
+                            Log.d(TAG, "chatRoomInfo: " + listChatRoom + timemess + contentmess);
+                            MessageAdapter adapter = new MessageAdapter(listChatRoom, MessageActivity.this, currentUser);
+                            lvListChat.setAdapter(adapter);
+                            lvListChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    ChatRoom chatRoom1 = (ChatRoom) parent.getItemAtPosition(position);
+                                    Intent intent = new Intent(MessageActivity.this, RoomChatActivity.class);
+                                    intent.putExtra("chatRoom", chatRoom1);
+                                    startActivity(intent);
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                });
+
             }
             @Override
             public void onCancelled(DatabaseError error) {
@@ -167,7 +189,7 @@ public class MessageActivity extends AppCompatActivity {
         return currentUserID;
     }
 
-    public void getCurrentPhoneNumber(OnCompleteCallback callback){
+    public void getCurrentPhoneNumber(OnCompleteCallbackUserPhone callback){
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -180,6 +202,28 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void sortChatRoomList(ArrayList<ChatRoom> listChatRoom, OnCompleteCallbackChatRoomList callback) {
+        for (ChatRoom chatRoom : listChatRoom) {
+            mDatabase = FirebaseDatabase.getInstance().getReference("Message");
+            mDatabase.get().addOnCompleteListener(task -> {
+                for (DataSnapshot data : task.getResult().getChildren()) {
+                    if (data.getKey().equals(chatRoom.getLastMessageId())) {
+                        Message message = data.getValue(Message.class);
+                        SimpleDateFormat formatter1=new SimpleDateFormat("dd-MM-yyyy hh:mm");
+                        try {
+                            chatRoom.setLastMessageDate(formatter1.parse(message.getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                callback.onComplete(listChatRoom);
+            });
+            Log.d(TAG, "sortChatRoomList: " + chatRoom.getLastMessageDate());
+        }
+
     }
 
 }
