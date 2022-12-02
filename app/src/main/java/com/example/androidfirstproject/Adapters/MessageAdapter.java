@@ -109,7 +109,12 @@ public class MessageAdapter extends BaseAdapter {
             for (DataSnapshot data : task.getResult().getChildren()) {
                 if (data.getKey().equals(chatRoom.getLastMessageId())) {
                     Message message = data.getValue(Message.class);
-                    holder.lastMessage.setText(message.getContent());
+                    if (message.getContent().length() > 15) {
+                        holder.lastMessage.setText(message.getContent().substring(0, 15) + "...");
+                    } else {
+                        holder.lastMessage.setText(message.getContent());
+                    }
+
                     SimpleDateFormat formatter1=new SimpleDateFormat("dd-MM-yyyy hh:mm");
                     try {
                         Date date = formatter1.parse(message.getTime());
