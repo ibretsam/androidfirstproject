@@ -89,7 +89,13 @@ public class RoomChatActivity extends AppCompatActivity {
          idChatRoom = chatRoom.getId();
         Log.d(">>>>>>>TAG","chatroomid"+idChatRoom);
 
-        getCurrentUser(chatRoom);
+        getCurrentUser(chatRoom, new OnCompleteCallbackUserPhone() {
+            @Override
+            public void onComplete(User phoneUser) {
+                listMessagesChatRoom.clear();
+                loadData();
+            }
+        });
 //        scrollToBottom(lvListChatRoom);
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +106,7 @@ public class RoomChatActivity extends AppCompatActivity {
               Message message = createMessage(phoneUser2,inputMessage,currentTime,idChatRoom);
               input_message.setText("");
 
-              sendMessage();
+              loadData();
 
               Toast.makeText(RoomChatActivity.this, "Tin nhắn đã gửi", Toast.LENGTH_SHORT).show();
             }
@@ -110,7 +116,7 @@ public class RoomChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         listMessagesChatRoom.clear();
-        reload();
+        loadData();
     }
 
     private User checkPhoneUser2(String phoneUser2) {
@@ -135,7 +141,7 @@ public class RoomChatActivity extends AppCompatActivity {
         return null;
     }
 
-    public void sendMessage() {
+    public void loadData() {
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -164,6 +170,41 @@ public class RoomChatActivity extends AppCompatActivity {
                 nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
                 String idLastMessage = listMessId.get(listMessId.size() - 1);
                 nDatabase.child("lastMessageId").setValue(idLastMessage);
+            }
+        });
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Toast.makeText(getApplicationContext(), "New message", Toast.LENGTH_SHORT).show();
+                listMessagesChatRoom.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Message message = data.getValue(Message.class);
+                    message.setId(data.getKey());
+                    if (idChatRoom.equals(message.getChatRoomId())) {
+                        messageID = message.getId();
+                        listMessagesChatRoom.add(message);
+                        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                for (DataSnapshot data : task.getResult().getChildren()) {
+                                    Message message1 = data.getValue(Message.class);
+                                    if (idChatRoom.equals(message1.getChatRoomId())) {
+                                        listMessagesChatRoom.add(message1);
+                                    }
+                                }
+                                ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this, currentUserPhone);
+                                lvListChatRoom.setAdapter(adapter);
+                                scrollToBottom(lvListChatRoom);
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -196,10 +237,10 @@ public class RoomChatActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this,currentUserID);
-                    adapter.notifyDataSetChanged();
+                    ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this, currentUserPhone);
                     lvListChatRoom.setAdapter(adapter);
                     scrollToBottom(lvListChatRoom);
+                    Log.d(TAG, "currentUserPhone: " + currentUserPhone);
                 }
             }
 
@@ -212,7 +253,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
     }
 
-    public  void getCurrentUser(ChatRoom chatRoom){
+    public void getCurrentUser(ChatRoom chatRoom, OnCompleteCallbackUserPhone callback){
         mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -222,6 +263,7 @@ public class RoomChatActivity extends AppCompatActivity {
                 } else {
                     User user = task.getResult().getValue(User.class);
                     currentUserPhone = user.getPhoneNumber();
+                    callback.onComplete(user);
                     Log.d(TAG, "current: " + currentUserPhone);
                     if (chatRoom != null) {
                         for (String phone : chatRoom.getUserPhoneNumber()) {

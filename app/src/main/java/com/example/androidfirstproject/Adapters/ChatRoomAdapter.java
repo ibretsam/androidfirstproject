@@ -27,24 +27,24 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
 
     private List<Message> listChat;
     private Context context;
-    private String currentUserID, currentPhoneUser1;
+    private String currentUserPhone, currentPhoneUser1;
     private DatabaseReference mDatabase;
 
-    public ChatRoomAdapter(List<Message> listChat, Context context, String currentUserID) {
+    public ChatRoomAdapter(List<Message> listChat, Context context, String currentUserPhone) {
         this.context = context;
         this.listChat = listChat;
-        this.currentUserID = currentUserID;
+        this.currentUserPhone = currentUserPhone;
     }
 
 
     @NonNull
     @Override
     public ChatRoomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
+        View view = null;
         if(viewType == MSG_TYPE_RIGHT) {
            view = LayoutInflater.from(context).inflate(R.layout.chat_layout_right,parent,false);
         }
-        else{
+        else if (viewType == MSG_TYPE_LEFT){
             view = LayoutInflater.from(context).inflate(R.layout.chat_layout_left,parent,false);
         }
         return new ChatRoomAdapter.ViewHolder(view);
@@ -64,20 +64,20 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
         return listChat.size();
     }
 
-    public void account(){
-        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
-        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    User user = task.getResult().getValue(User.class);
-                    currentPhoneUser1 = user.getPhoneNumber();
-                }
-            }
-        });
-    }
+//    public void account(){
+//        mDatabase = FirebaseDatabase.getInstance().getReference("user").child(currentUserID);
+//        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                } else {
+//                    User user = task.getResult().getValue(User.class);
+//                    currentPhoneUser1 = user.getPhoneNumber();
+//                }
+//            }
+//        });
+//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
        public TextView myMessage, myTime;
@@ -89,8 +89,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     }
     @Override
     public int getItemViewType(int position) {
-        account();
-        if(listChat.get(position).getPhoneUser1().equals(currentPhoneUser1)){
+//        account();
+        if(listChat.get(position).getPhoneUser1().equals(currentUserPhone)){
             Log.d(">>>>>>>>>>TAG","vitri"+listChat.get(position).getPhoneUser1()+currentPhoneUser1);
             return MSG_TYPE_RIGHT;
         }
