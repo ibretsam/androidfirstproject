@@ -92,7 +92,6 @@ public class RoomChatActivity extends AppCompatActivity {
         getCurrentUser(chatRoom, new OnCompleteCallbackUserPhone() {
             @Override
             public void onComplete(User phoneUser) {
-                listMessagesChatRoom.clear();
                 loadData();
             }
         });
@@ -142,6 +141,7 @@ public class RoomChatActivity extends AppCompatActivity {
     }
 
     public void loadData() {
+        listMessagesChatRoom.clear();
         mDatabase = FirebaseDatabase.getInstance().getReference("Message");
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -166,7 +166,7 @@ public class RoomChatActivity extends AppCompatActivity {
                     }
                 }
                 listMessagesChatRoom.clear();
-                reload();
+//                reload();
                 nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
                 String idLastMessage = listMessId.get(listMessId.size() - 1);
                 nDatabase.child("lastMessageId").setValue(idLastMessage);
@@ -199,7 +199,6 @@ public class RoomChatActivity extends AppCompatActivity {
                         });
                     }
                 }
-
             }
 
             @Override
