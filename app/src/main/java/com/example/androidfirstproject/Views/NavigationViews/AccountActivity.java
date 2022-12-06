@@ -2,12 +2,21 @@ package com.example.androidfirstproject.Views.NavigationViews;
 
 import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +40,7 @@ public class AccountActivity extends AppCompatActivity {
     private String currentUserID,nameUser1,CurrentPhoneUser1;
     private DatabaseReference mDatabase;
     TextView myPhone, myName;
+    ImageView nameEditBtn;
 
 
     @Override
@@ -42,6 +52,7 @@ public class AccountActivity extends AppCompatActivity {
         myPhone = findViewById(R.id.myPhone);
         myName = findViewById(R.id.myName);
         logoutBtn = findViewById(R.id.logoutBtn);
+        nameEditBtn = findViewById(R.id.nameEditBtn);
 
         getCurrentId();
 
@@ -53,6 +64,13 @@ public class AccountActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(AccountActivity.this, PhoneInputActivity.class));
                 finish();
+            }
+        });
+
+        nameEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNewUserDialog(Gravity.CENTER);
             }
         });
 
@@ -80,6 +98,52 @@ public class AccountActivity extends AppCompatActivity {
 
 
     }
+
+    private void openNewUserDialog(int gravity) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_update);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = gravity;
+        window.setAttributes(windowAttributes);
+
+        EditText edtName = dialog.findViewById(R.id.edt_name_update);
+        Button btnUpdate = dialog.findViewById(R.id.btnUpdate);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        final Handler heHandler = new Handler();
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = edtName.getText().toString();
+                mDatabase.child("/fullName").setValue(name);
+                account();
+
+                heHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                    }
+                }, 400);
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+
 
     public void getCurrentId(){
         if ( currentUserID == null) {
