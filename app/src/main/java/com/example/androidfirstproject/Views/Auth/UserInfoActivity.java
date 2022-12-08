@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
+import com.example.androidfirstproject.Views.NavigationViews.MessageActivity;
 import com.example.androidfirstproject.Views.NavigationViews.PhoneBookActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,7 +57,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     String profileUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
                     String fullName = fullNameInput.getText().toString();
                     createUser(userId, phone, fullName, profileUrl);
-                    startActivity(new Intent(UserInfoActivity.this, PhoneBookActivity.class));
+                    startActivity(new Intent(UserInfoActivity.this, MessageActivity.class));
                 }
             }
         });

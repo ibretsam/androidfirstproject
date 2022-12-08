@@ -16,9 +16,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.androidfirstproject.Adapters.PhoneBookAdapter;
+import com.example.androidfirstproject.Models.Message;
 import com.example.androidfirstproject.Models.User;
 import com.example.androidfirstproject.R;
 import com.example.androidfirstproject.Views.HomeActivity;
+import com.example.androidfirstproject.Views.NavigationViews.MessageActivity;
 import com.example.androidfirstproject.Views.NavigationViews.PhoneBookActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,6 +67,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
         sendVerificationCode(phone);
 
+
+
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +78,9 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     edtOTP.setError("Please enter your OTP.");
                     return;
                 }
+
+                mDatabase = FirebaseDatabase.getInstance().getReference("test");
+                mDatabase.setValue("test");
 
                 verifyCode(otp);
                 checkUser(phone);
@@ -85,8 +92,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private void sendVerificationCode(String phoneNumber) {
         try {
             Log.d(TAG, "sendVerificationCode: " + phoneNumber);
-            FirebaseAuth.getInstance().getFirebaseAuthSettings()
-                    .setAppVerificationDisabledForTesting(true);
+//            FirebaseAuth.getInstance().getFirebaseAuthSettings()
+//                    .setAppVerificationDisabledForTesting(true);
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(rAuth)
                             .setPhoneNumber(phoneNumber)       // Set số điện thoại
@@ -176,7 +183,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                                 if (user != null) {
                                     String currentUserID = user.getUid();
 
-                                    Intent intent1 = new Intent(VerifyPhoneActivity.this, PhoneBookActivity.class);
+                                    Intent intent1 = new Intent(VerifyPhoneActivity.this, MessageActivity.class);
                                     Bundle bundle1 = new Bundle();
                                     bundle1.putString("currentUserID", currentUserID);
                                     intent.putExtra("currentUserPackage", bundle);
