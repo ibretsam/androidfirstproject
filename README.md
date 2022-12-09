@@ -1,7 +1,4 @@
-# Update 04/11/2022
-
-## Tên App:
-Chưa nghĩ ra... (Mọi người cùng suy nghĩ thêm nhé)
+# Chat Pro App
 
 ## Công nghệ: 
 Java + Firebase
@@ -34,21 +31,22 @@ Mình sẽ có khoảng 6 màn hình chính
 
 ## Database Model:
 - User:
-     + PhoneNumber (Primary Key)
-     + FullName
-     + PictureLink
+     + id (String)
+     + PhoneNumber (String) 
+     + fullName (String)
+     + Picture (String)
+     + phoneBook (ArrayList<String>)
 - Message:
-     + Sender (FK -> User)
-     + Receipient (FK -> User)
-     + Content
-     + ChatRoomID (FK -> ChatRoom)
-     + Time
+     + id (String)
+     + content (String)
+     + time (String)
+     + chatRoomId (String)
+     + phoneUser1Id (String)
+     + phoneUser2Id (String)
 - ChatRoom:
-     + Id (Primary Key)
-     + User1 (FK -> User)
-     + User2 (FK -> User)
-     + LastMessage(FK -> Message)
-## Dặn dò
-Hiện tại nhóm mình chỉ đang chờ Linh làm xong phần giao diện, mọi người nếu có làm những tính năng gì khác thì cứ làm thử ở ngoài, khoan hẵn commit lên git hen, để cho đỡ rối. Đợi Linh làm giao diện xong mình sửa lại rồi tới phần ai làm gì thì mình sẽ chia sau.
-
-Nếu ai thấy có ý tưởng gì hay hoặc muốn thử làm gì cứ nhắn lên nhóm hoặc inbox anh hen. Hiện anh đã làm xong phần đăng ký bằng số điện thoại với firebase rồi. Có gì mọi người kéo về test thử nhé!
+     + Id (String)
+     + nameUser2 (String)
+     + lastMessageID (String)
+     + messageList (ArrayList<String>)
+     + userPhoneNumber (ArrayList<String>)
+     + lastMessageDate (Date)
