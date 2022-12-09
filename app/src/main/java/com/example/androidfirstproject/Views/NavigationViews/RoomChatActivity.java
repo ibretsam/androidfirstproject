@@ -114,8 +114,8 @@ public class RoomChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        listMessagesChatRoom.clear();
-        loadData();
+//        listMessagesChatRoom.clear();
+//        loadData();
     }
 
     private User checkPhoneUser2(String phoneUser2) {
@@ -165,11 +165,13 @@ public class RoomChatActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Error send message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
-                listMessagesChatRoom.clear();
 //                reload();
                 nDatabase = FirebaseDatabase.getInstance().getReference("chatRoom").child(idChatRoom);
-                String idLastMessage = listMessId.get(listMessId.size() - 1);
-                nDatabase.child("lastMessageId").setValue(idLastMessage);
+                if (!listMessId.isEmpty()) {
+                    String idLastMessage = listMessId.get(listMessId.size() - 1);
+                    nDatabase.child("lastMessageId").setValue(idLastMessage);
+                }
+
             }
         });
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -183,20 +185,9 @@ public class RoomChatActivity extends AppCompatActivity {
                     if (idChatRoom.equals(message.getChatRoomId())) {
                         messageID = message.getId();
                         listMessagesChatRoom.add(message);
-                        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                for (DataSnapshot data : task.getResult().getChildren()) {
-                                    Message message1 = data.getValue(Message.class);
-                                    if (idChatRoom.equals(message1.getChatRoomId())) {
-                                        listMessagesChatRoom.add(message1);
-                                    }
-                                }
-                                ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this, currentUserPhone);
-                                lvListChatRoom.setAdapter(adapter);
-                                scrollToBottom(lvListChatRoom);
-                            }
-                        });
+                        ChatRoomAdapter adapter = new ChatRoomAdapter(listMessagesChatRoom, RoomChatActivity.this, currentUserPhone);
+                        lvListChatRoom.setAdapter(adapter);
+                        scrollToBottom(lvListChatRoom);
                     }
                 }
             }
